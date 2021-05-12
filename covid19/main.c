@@ -89,3 +89,8 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
 //fclose(lfich);
             return 0;
 }
+
+struct linha {
+    int n_inf, n_mort, popu, week_count, n_week, lastfteen;
+    char pais, cod_pais, indic;
+}
