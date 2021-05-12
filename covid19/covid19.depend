@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1620760208 source:/media/sf_C/ProjetoCovid/covid19/main.c
+1620819182 source:/media/sf_C/ProjetoCovid/covid19/main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
