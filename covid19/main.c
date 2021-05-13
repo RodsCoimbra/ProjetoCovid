@@ -75,7 +75,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         {
             printf("*Carater %c nao identificado", optopt);
         }
-}}
+}   }
 
 //FILE *pf = fopen(lfich, "w+");
 //printf("ficheiro a ler - %s\n", lfich);
@@ -90,7 +90,17 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             return 0;
 }
 
-struct linha {
-    int n_inf, n_mort, popu, week_count, n_week, lastfteen;
-    char pais, cod_pais, indic;
-}
+typedef struct linha {
+    int n_inf;
+    int n_mort;
+    int popu;
+    int week_count;
+    int n_week;
+    int lastfteen;
+    char pais;
+    char cod_pais[3];
+    char indic[6]; // 6? porque deaths é o maior que pode ser escrito lá???
+    struct linha * next; 
+} linha;
+
+
