@@ -29,7 +29,7 @@ if(str[i] == sep){
  return psep;
 }
 
-int main(int argc, char *argv[])       //   Rececao da informacao dada pelo jogador no inicio do programa me termos de dimensao do tabuleiro, modo de disparo, posicionamento e numero de pecas por tipo
+int main(int argc, char *argv[])
 {
     int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
     char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4];
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         }   
     }
 
-FILE *lp
+FILE *lp;
  if(strcmp(l_ext,"csv")) {
     if ((lp = fopen(l_fich, "r"))==NULL){
         help(2); 
@@ -97,6 +97,11 @@ FILE *lp
     else{
         help(2);
 }
+
+char string[100], formato[100];
+sprintf(formato, "%%%ds", 99);
+fscanf(lp, "%99s", string);
+printf("%s", string);
 
 //printf("ficheiro a ler - %s\n", lfich);
 
@@ -123,4 +128,3 @@ help(int helpvar){
                 break;
     }
 }
-
