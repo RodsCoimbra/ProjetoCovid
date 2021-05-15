@@ -30,7 +30,7 @@ int i;
 char *psep = NULL;
 for(i=0; str[i] != '\0' ; i++){
 if(str[i] == sep){
-    //str[i] = '\0';                    resolver mais tarde
+    str[i] = '\0';      // ver getop
     psep = &str[i+1];
     break;
 }
@@ -138,9 +138,19 @@ else{
         help(2);
 }
 
+if (fgets(ler, max_linha, lp)==NULL){
+    help(4);
+}
+
+printf("%s \n", ler);
+
 // Ler linhas
 while (fgets(ler, max_linha, lp) != NULL){
-    separar();
+    //novo_node();
+
+    while(separar(',', ler)!=NULL){
+        sscanf(ler, " %s,",);                /* -> */
+    }
 }
 
 fclose(lp);
@@ -158,7 +168,7 @@ fclose(lp);
                 
 }
 
-linha * novo_node() {
+/*linha * novo_node() {
     linha * new_param;
     if (new_param = (linha*) malloc(sizeof(linha)) == NULL){
             help(3);
@@ -166,5 +176,5 @@ linha * novo_node() {
 
     new_param->next = NULL;
 
-}
+} */
 
