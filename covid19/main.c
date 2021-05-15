@@ -14,28 +14,65 @@ typedef struct linha {
     char pais[35];
     char cod_pais[4];
     char indic[7];
-    struct linha * next; 
+    struct linha * next;
 } linha;
 
+/** \brief
+ *
+ * \param sep char
+ * \param str char*
+ * \return char*
+ *
+ */
 char* separar(char sep, char* str){
 int i;
 char *psep;
 for(i=0; str[i] != '\0' ; i++){
 if(str[i] == sep){
-    str[i] = '\0';
+    //str[i] = '\0';                    resolver mais tarde
     psep = &str[i+1] ;
 }
 }
  return psep;
 }
 
+
+
+/** \brief
+ *
+ * \param
+ * \param
+ * \return
+ *
+ */
+help(int helpvar){
+    switch (helpvar) {
+        case 1: printf("Erro! Problema nos argumentos de entrada");
+                exit(-1);
+                break;
+        case 2: printf("Nao foi possivel ler o ficheiro de entrada.");
+                exit(-1);
+                break;
+        case 3: printf("");
+                exit(-1);
+                break;
+    }
+}
+
+/** \brief
+ *
+ * \param argc int
+ * \param argv[] char*
+ * \return int
+ *
+ */
 int main(int argc, char *argv[])
 {
     int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
     char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4];
     opterr = 0;
     char *pend;
-    while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informações do utilizador no incio do programa
+    while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informa��es do utilizador no incio do programa
     {
         switch (opt)
         {
@@ -82,27 +119,28 @@ int main(int argc, char *argv[])
         {
             help(1);
         }
-        }   
+        }
     }
 
 FILE *lp;
- if(strcmp(l_ext,"csv")) {
+ if(strcmp(l_ext,"csv") == 0) {
     if ((lp = fopen(l_fich, "r"))==NULL){
-        help(2); 
+        printf("Entrei aqui!!!");
+        help(2);
     }}
-    else if(strcmp(l_ext,"dat"))
-    ((lp = fopen(l_fich, "rb"))==NULL){
-        help(2); }
+else if(strcmp(l_ext,"dat") == 0){
+    if ((lp = fopen(l_fich, "rb"))==NULL){
+        help(2); }}
 
-    else{
+else{
         help(2);
 }
 
-char string[100], formato[100];
-sprintf(formato, "%%%ds", 99);
-fscanf(lp, "%99s", string);
+char string[100];
+fscanf(lp, " %s", string);
 printf("%s", string);
 
+fclose(lp);
 //printf("ficheiro a ler - %s\n", lfich);
 
             /*printf("ficheiro a ler - %s.%s\n", lfich, exte);
@@ -111,20 +149,6 @@ printf("%s", string);
             printf("P - %s  %d\n", ordem, numero);
             printf("%d-%d\n", ano1, semana1);
             printf("%d-%d\n", ano2, semana2);           //so para teste, depois apagar*/
-//fclose(lfich);
             return 0;
 }
 
-help(int helpvar){
-    switch (helpvar) {
-        case 1: printf("Erro! Problema nos argumentos de entrada");
-                exit(-1);
-                break;
-        case 2: printf("Nao foi possivel ler o ficheiro de entrada.");
-                exit(-1);
-                break;
-        case 3: printf("");
-                exit(-1);
-                break;
-    }
-}
