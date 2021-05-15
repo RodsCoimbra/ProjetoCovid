@@ -24,7 +24,7 @@ if(str[i] == sep){
 int main(int argc, char *argv[])       //   Rececao da informacao dada pelo jogador no inicio do programa me termos de dimensao do tabuleiro, modo de disparo, posicionamento e numero de pecas por tipo
 {
     int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
-    char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], lfich[maxficheiro], efich[maxficheiro], exte[4], exts[4];
+    char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4];
     opterr = 0;
     char *pend;
     while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informações do utilizador no incio do programa
@@ -43,8 +43,7 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             sscanf(optarg + 14," %d-%d", &ano2, &semana2);
             }
             else{
-                printf("Erro! Parametro invalido");
-                return(-1);
+                help(1);
             }
             break;
         case 'L':
@@ -60,20 +59,20 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
             break;
 
         case 'i':
-            sscanf(optarg," %s", lfich);
-            pend = separar('.', lfich);
-            sscanf(pend,"%s", exte);
+            sscanf(optarg," %s", l_fich);
+            pend = separar('.', l_fich);
+            sscanf(pend,"%s", l_ext);
             break;
 
         case 'o':
-            sscanf(optarg," %s", efich);
-            pend = separar('.', efich);
-            sscanf(pend,"%s", exts);
+            sscanf(optarg," %s", e_fich);
+            pend = separar('.', e_fich);
+            sscanf(pend,"%s", e_ext);
             break;
 
         default:    // Mostra a mensagem se for escrito um caracter sem sentido no programa
         {
-            printf("*Carater %c nao identificado", optopt);
+            help(1);
         }
 }   }
 
@@ -103,4 +102,11 @@ typedef struct linha {
     struct linha * next; 
 } linha;
 
-
+help(int helpvar){
+    switch (helpvar) {
+        case 1: printf("Erro! Problema nos argumentos de entrada");
+                return (-1);
+        case 2: printf("");
+        case 3: printf("");
+    }
+}
