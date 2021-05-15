@@ -3,19 +3,20 @@
 #include <string.h>
 #include <getopt.h>
 #define maxficheiro 259 //numero max de carateres de ficheiros no windows
+#define max_linha 120
 
 typedef struct linha {
-    int n_inf;
-    int n_mort;
+    int n_dorc; // numero de deaths or cases
     int popu;
     int week_count;
     int n_week;
     int lastfteen;
+    char cont[8];
     char pais[35];
     char cod_pais[4];
     char indic[7];
     struct linha * next;
-} linha;
+} linha;    
 
 /** \brief
  *
@@ -26,11 +27,12 @@ typedef struct linha {
  */
 char* separar(char sep, char* str){
 int i;
-char *psep;
+char *psep = NULL;
 for(i=0; str[i] != '\0' ; i++){
 if(str[i] == sep){
     //str[i] = '\0';                    resolver mais tarde
-    psep = &str[i+1] ;
+    psep = &str[i+1];
+    break;
 }
 }
  return psep;
@@ -53,7 +55,7 @@ help(int helpvar){
         case 2: printf("Nao foi possivel ler o ficheiro de entrada.");
                 exit(-1);
                 break;
-        case 3: printf("");
+        case 3: printf("Nao foi possivel alocar memória.");
                 exit(-1);
                 break;
     }
@@ -69,7 +71,7 @@ help(int helpvar){
 int main(int argc, char *argv[])
 {
     int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
-    char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4];
+    char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha];
     opterr = 0;
     char *pend;
     while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informa��es do utilizador no incio do programa
@@ -136,9 +138,10 @@ else{
         help(2);
 }
 
-char string[100];
-fscanf(lp, " %s", string);
-printf("%s", string);
+// Ler linhas
+while (fgets(ler, max_linha, lp) != NULL){
+    separar();
+}
 
 fclose(lp);
 //printf("ficheiro a ler - %s\n", lfich);
@@ -150,5 +153,18 @@ fclose(lp);
             printf("%d-%d\n", ano1, semana1);
             printf("%d-%d\n", ano2, semana2);           //so para teste, depois apagar*/
             return 0;
+
+
+                
+}
+
+linha * novo_node() {
+    linha * new_param;
+    if (new_param = (linha*) malloc(sizeof(linha)) == NULL){
+            help(3);
+    }
+
+    new_param->next = NULL;
+
 }
 
