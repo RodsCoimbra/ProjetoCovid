@@ -74,9 +74,20 @@ int main(int argc, char *argv[])       //   Rececao da informacao dada pelo joga
         {
             help(1);
         }
-}   }
+        }   
+    }
 
-//FILE *pf = fopen("lfich", "w+");
+FILE *lp
+ if(strcmp(l_ext,"csv")) {
+    if ((lp = fopen(l_fich, "r"))==NULL){
+        help(2); 
+    }}
+    else if(strcmp(l_ext,"dat"))
+    ((lp = fopen(l_fich, "rb"))==NULL){
+        help(2); }
+
+    else{
+        help(2);
 //printf("ficheiro a ler - %s\n", lfich);
 
             /*printf("ficheiro a ler - %s.%s\n", lfich, exte);
@@ -105,8 +116,14 @@ typedef struct linha {
 help(int helpvar){
     switch (helpvar) {
         case 1: printf("Erro! Problema nos argumentos de entrada");
-                return (-1);
-        case 2: printf("");
+                exit(-1);
+                break;
+        case 2: printf("Nao foi possivel ler o ficheiro de entrada.");
+                exit(-1);
+                break;
         case 3: printf("");
+                exit(-1);
+                break;
     }
 }
+
