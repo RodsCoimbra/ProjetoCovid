@@ -4,6 +4,18 @@
 #include <getopt.h>
 #define maxficheiro 259 //numero max de carateres de ficheiros no windows
 
+typedef struct linha {
+    int n_inf;
+    int n_mort;
+    int popu;
+    int week_count;
+    int n_week;
+    int lastfteen;
+    char pais[35];
+    char cod_pais[4];
+    char indic[7];
+    struct linha * next; 
+} linha;
 
 char* separar(char sep, char* str){
 int i;
@@ -16,10 +28,6 @@ if(str[i] == sep){
 }
  return psep;
 }
-
-
-
-
 
 int main(int argc, char *argv[])       //   Rececao da informacao dada pelo jogador no inicio do programa me termos de dimensao do tabuleiro, modo de disparo, posicionamento e numero de pecas por tipo
 {
@@ -88,6 +96,8 @@ FILE *lp
 
     else{
         help(2);
+}
+
 //printf("ficheiro a ler - %s\n", lfich);
 
             /*printf("ficheiro a ler - %s.%s\n", lfich, exte);
@@ -99,19 +109,6 @@ FILE *lp
 //fclose(lfich);
             return 0;
 }
-
-typedef struct linha {
-    int n_inf;
-    int n_mort;
-    int popu;
-    int week_count;
-    int n_week;
-    int lastfteen;
-    char pais[35];
-    char cod_pais[4];
-    char indic[7];
-    struct linha * next; 
-} linha;
 
 help(int helpvar){
     switch (helpvar) {
