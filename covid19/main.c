@@ -9,14 +9,14 @@ typedef struct linha {
     int n_dorc; // numero de deaths or cases
     int popu;
     int week_count;
-    int n_week;
-    int lastfteen;
+    int year_week;
+    float lastfteen;
     char cont[8];
     char pais[35];
     char cod_pais[4];
     char indic[7];
-    struct linha * next;
-} linha;    
+    //struct linha * next;
+} linha;
 
 /** \brief
  *
@@ -25,12 +25,12 @@ typedef struct linha {
  * \return char*
  *
  */
-char* separar(char sep, char* str){
+char* separar(char sep, char* str, char troca){
 int i;
 char *psep = NULL;
-for(i=0; str[i] != '\0' ; i++){
+for(i=0; str[i] != EOF ; i++){
 if(str[i] == sep){
-    str[i] = '\0';      // ver getop
+    str[i] = troca;
     psep = &str[i+1];
     break;
 }
@@ -47,7 +47,7 @@ if(str[i] == sep){
  * \return
  *
  */
-help(int helpvar){
+void help(int helpvar){
     switch (helpvar) {
         case 1: printf("Erro! Problema nos argumentos de entrada");
                 exit(-1);
@@ -61,6 +61,23 @@ help(int helpvar){
     }
 }
 
+
+/** \brief
+ *
+ * \param ler char*
+ * \param a char*
+ * \return char*
+ *
+ */
+/*char* leit(char* ler, char* a){
+char* pend;
+pend = separar(',', ler,'\0');
+    sscanf(ler, "%s", a);
+    return pend;
+}
+*/
+
+
 /** \brief
  *
  * \param argc int
@@ -70,10 +87,11 @@ help(int helpvar){
  */
 int main(int argc, char *argv[])
 {
+    ///linha linha1;///isto e para apagar
     int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
     char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha];
     opterr = 0;
-    char *pend;
+    char *pend, *pend2;
     while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informa��es do utilizador no incio do programa
     {
         switch (opt)
@@ -107,13 +125,13 @@ int main(int argc, char *argv[])
 
         case 'i':
             sscanf(optarg," %s", l_fich);
-            pend = separar('.', l_fich);
+            pend = separar('.', l_fich,'.');
             sscanf(pend,"%s", l_ext);
             break;
 
         case 'o':
             sscanf(optarg," %s", e_fich);
-            pend = separar('.', e_fich);
+            pend = separar('.', e_fich,'.');
             sscanf(pend,"%s", e_ext);
             break;
 
@@ -142,22 +160,41 @@ if (fgets(ler, max_linha, lp)==NULL){
     help(4);
 }
 
-printf("%s \n", ler);
-
+printf("%s \n", ler+3); //titulo
+char a[35],b[35],c[35],e[35],g[35];
+int d,f,i;
+double h;
 // Ler linhas
-while (fgets(ler, max_linha, lp) != NULL){
+while(fgets(ler, max_linha, lp)!=NULL){
     //novo_node();
+    pend = separar(',', ler,'\0');
+    sscanf(ler, " %[^,]", a);  //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
+    pend2 = separar(',', ler,'\0');
+    sscanf(pend, " %s", b);
+    pend = separar(',', ler,'\0');
+    sscanf(pend2, " %s", c);
+    pend2 = separar(',', ler,'\0');
+    sscanf(pend, " %d", &d);
+    pend = separar(',', ler,'\0');
+    sscanf(pend2, " %s", e);
+    pend2 = separar(',', ler,'\0');
+    sscanf(pend, " %d", &f);
+    pend = separar(',', ler,'\0');
+    sscanf(pend2, " %s", g);
+    pend2 = separar(',', ler,'\0');
+    sscanf(pend, " %lf", &h);
+    separar(',', ler,'\0');
+    sscanf(pend2, " %d", &i);
 
-    while(separar(',', ler)!=NULL){
-        sscanf(ler, " %s,",);                /* -> */
-    }
-}
+    printf("%s / %s / %s / %d / %s / %d / %s / %f / %d\n\n",  a, b, c, d, e, f, g, h, i);}
+
+
 
 fclose(lp);
-//printf("ficheiro a ler - %s\n", lfich);
 
-            /*printf("ficheiro a ler - %s.%s\n", lfich, exte);
-            printf("ficheiro a escrever - %s.%s\n", efich, exts);
+            /*printf("ficheiro a ler - %s \n", l_fich);
+            printf("ficheiro a ler - %s.%s\n", l_fich, l_ext);
+            printf("ficheiro a escrever - %s.%s\n", efich, e_ext);
             printf("L - %s \n", leitura);
             printf("P - %s  %d\n", ordem, numero);
             printf("%d-%d\n", ano1, semana1);
@@ -165,9 +202,9 @@ fclose(lp);
             return 0;
 
 
-                
-}
 
+}
+///Criar node
 /*linha * novo_node() {
     linha * new_param;
     if (new_param = (linha*) malloc(sizeof(linha)) == NULL){
