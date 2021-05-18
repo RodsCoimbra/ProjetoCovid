@@ -1,7 +1,0 @@
-# depslib dependency file v1.0
-1621095163 source:c:\users\rodsc\onedrive - universidade de lisboa\aa\main.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<getopt.h>
-
