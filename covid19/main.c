@@ -116,7 +116,7 @@ void apagar(linha* ende){
 
 linha* aux;
 
-while(ende->next != NULL)
+while(ende != NULL)
 {
    aux = ende;
    ende = ende->next;
@@ -206,9 +206,9 @@ int main(int argc, char *argv[])
             help(2);
         }
     }
-    else if(strcmp(l_ext,"dat") == 0)
+    else if((strcmp(l_ext,"dat")) == 0)
     {
-        if ((lp = fopen(l_fich, "rb"))==NULL)
+        if ((lp = fopen(l_fich, "rb")) ==NULL)
         {
             help(2);
         }
@@ -247,7 +247,5 @@ int main(int argc, char *argv[])
     printf("%d-%d\n", ano1, semana1);
     printf("%d-%d\n", ano2, semana2);           //so para teste, depois apagar*/
     return 0;
-
-
 
 }
