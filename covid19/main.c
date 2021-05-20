@@ -23,27 +23,6 @@ typedef struct Pais {
     struct Pais *nextP; // nextP é o pointer do pais seguinte
 } Pais;
 
-/*void inserir_detalhes (pais **pais_list, detalhes *head, int n_dorc, int week_count, int year_week, float lastfteen, char indic[7]){
-    pais *aux,*atual;
-    aux=(pais*)malloc(sizeof(pais));
-    aux->nextD = head;
-    if((*pais_list)==NULL){
-        (*pais_list) = aux;
-    }
-    else{
-        atual=(*pais_list);
-        while(atual->nextD!=NULL){
-            atual=atual->nextD;
-        }
-        atual->nextD=aux;
-    }
-}
-
-pais *inserir_paises (struct detalhes **head, int popu, char cont, char pais, char cod_pais){
-
-}*/
-
-
 void help(int helpvar)
 {
     switch (helpvar)
@@ -69,7 +48,7 @@ Pais* verificacao(char* cod_pais,Pais* head){
         return NULL;
     }
     for(aux = head;aux != NULL;aux = aux->nextP){
-        if(strcmp(cod_pais,aux->cod_pais) == 0){
+        if(strcmp(cod_pais,aux->cod_pais) == 0){   //comparacao com o codigo dos paises
         return aux;
         }
     }
@@ -118,6 +97,11 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
     if (head == NULL){
         novo->nextP = NULL;
         novo->nextD = deta;
+        deta->n_dorc = n_dorc;
+        deta->lastfteen = lastfteen;
+        deta->week_count = week_count;
+        strcpy(deta->year_week, year_week);
+        strcpy(deta->indic, indic);
         return novo;
     }
     Pais* aux = head;
@@ -125,8 +109,12 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
          aux = aux->nextP;
     }
     aux->nextP = novo;
-    aux->nextD = deta;
-    criarD(deta, indic, week_count, year_week, lastfteen, n_dorc);
+    novo->nextD = deta;
+    deta->n_dorc = n_dorc;
+    deta->lastfteen = lastfteen;
+    deta->week_count = week_count;
+    strcpy(deta->year_week, year_week);
+    strcpy(deta->indic, indic);
     return head;
 }
 
@@ -158,18 +146,24 @@ char* separar(char sep, char* str, char troca)
 }
 
 
-/*void apagar(linha* ende)
+void apagar(Pais* head)
 {
 
-    linha* aux;
+    Pais* aux;
+    Detalhes* aux2;
 
-    while(ende != NULL)
+    while(head != NULL)
     {
-        aux = ende;
-        ende = ende->next;
+        while(head->nextD != NULL){
+            aux2 = head->nextD;
+            head->nextD = head->nextD->nextD;
+            free(aux2);
+        }
+        aux = head;
+        head = head->nextP;
         free(aux);
     }
-}*/
+}
 
 
 
@@ -324,16 +318,15 @@ int main(int argc, char *argv[])
     for (atual = head ; atual != NULL; atual = atual->nextP){
     for (atual2 = atual->nextD; atual2 != NULL; atual2 = atual2->nextD)
     {
-        //printf("%s / %s / %s / %d / %s / %d / %s / %.9f / %d\n\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
-        //depois apagar o printf
         printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+        //depois apagar o printf
         fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
     }
     }
-    //apagar(head);
+    apagar(head);
     fclose(lp);
     fclose(ep);
-    printf("O seu ficheiro foi concluido!\n");
+    printf("\nO seu ficheiro foi concluido!\n");
     return 0;
 
 }
