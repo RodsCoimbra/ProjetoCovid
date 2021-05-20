@@ -5,21 +5,43 @@
 #define maxficheiro 259 //numero max de carateres de ficheiros no windows
 #define max_linha 120
 
-typedef struct linha
-{
-    int n_dorc; // number deaths or cases
-    int popu;
+typedef struct detalhes { // lista que está dentro da lista "pais"
+    int n_dorc; // numero de deaths or cases
     int week_count;
-    char year_week[8];
-    double lastfteen;
-    char cont[8];
+    int year_week;
+    float lastfteen;
+    char indic[7];
+    struct detalhes *nextD; // nextD é o pointer do detalhe seguinte
+} detalhes;
+
+typedef struct pais {
     char pais[35];
     char cod_pais[4];
-    char indic[7];
-    struct linha * next;
-} linha;
+    char cont[8];
+    int popu;
+    detalhes *nextD;
+    struct pais *nextP; // nextP é o pointer do pais seguinte
+} pais;
 
+void inserir_detalhes (pais **pais_list, detalhes *head, int n_dorc, int week_count, int year_week, float lastfteen, char indic[7]){
+    pais *aux,*atual;
+    aux=(pais*)malloc(sizeof(pais));
+    aux->nextD = head;
+    if((*pais_list)==NULL){
+        (*pais_list) = aux;
+    }
+    else{
+        atual=(*pais_list);
+        while(atual->nextD!=NULL){
+            atual=atual->nextD;
+        }
+        atual->nextD=aux;
+    }
+}
 
+pais *inserir_paises (struct detalhes **head, int popu, char cont, char pais, char cod_pais){
+    
+}
 
 /** \brief
 *
@@ -77,26 +99,28 @@ void criar(linha** ende, char* ler)  // ende=endereço
     {
         help(3);
     }
-
-    pend = separar(',', ler,'\0');
-    sscanf(ler, " %[^,]", novo->pais);  //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
-    pend2 = separar(',', ler,'\0');
-    sscanf(pend, " %s", novo->cod_pais);
-    pend = separar(',', ler,'\0');
-    sscanf(pend2, " %s", novo->cont);
-    pend2 = separar(',', ler,'\0');
-    sscanf(pend, " %d", &(novo->popu));
-    pend = separar(',', ler,'\0');
-    sscanf(pend2, " %s", novo->indic);
-    pend2 = separar(',', ler,'\0');
-    sscanf(pend, " %d", &(novo->week_count));
-    pend = separar(',', ler,'\0');
-    sscanf(pend2, " %s", novo->year_week);
-    pend2 = separar(',', ler,'\0');
-    novo->lastfteen = 0;
-    sscanf(pend, " %lf", &(novo->lastfteen));
-    separar(',', ler,'\0');
-    sscanf(pend2, " %d", &(novo->n_dorc));
+    if(strcmp(ler, "12345678") != 0)
+    {
+        pend = separar(',', ler,'\0');
+        sscanf(ler, " %[^,]", novo->pais);  //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
+        pend2 = separar(',', ler,'\0');
+        sscanf(pend, " %s", novo->cod_pais);
+        pend = separar(',', ler,'\0');
+        sscanf(pend2, " %s", novo->cont);
+        pend2 = separar(',', ler,'\0');
+        sscanf(pend, " %d", &(novo->popu));
+        pend = separar(',', ler,'\0');
+        sscanf(pend2, " %s", novo->indic);
+        pend2 = separar(',', ler,'\0');
+        sscanf(pend, " %d", &(novo->week_count));
+        pend = separar(',', ler,'\0');
+        sscanf(pend2, " %s", novo->year_week);
+        pend2 = separar(',', ler,'\0');
+        novo->lastfteen = 0;
+        sscanf(pend, " %lf", &(novo->lastfteen));
+        separar(',', ler,'\0');
+        sscanf(pend2, " %d", &(novo->n_dorc));
+    }
     if (*ende == NULL)
     {
         *ende = novo;
@@ -112,16 +136,17 @@ void criar(linha** ende, char* ler)  // ende=endereço
 
 
 
-void apagar(linha* ende){
-
-linha* aux;
-
-while(ende != NULL)
+void apagar(linha* ende)
 {
-   aux = ende;
-   ende = ende->next;
-   free(aux);
-}
+
+    linha* aux;
+
+    while(ende != NULL)
+    {
+        aux = ende;
+        ende = ende->next;
+        free(aux);
+    }
 }
 
 
@@ -136,7 +161,6 @@ while(ende != NULL)
  */
 int main(int argc, char *argv[])
 {
-    ///linha linha1;///isto e para apagar
     int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
     char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend;
     opterr = 0;
@@ -198,11 +222,12 @@ int main(int argc, char *argv[])
     }
 
     FILE *lp;
+    FILE *ep;
+    //Tipo de leitura
     if(strcmp(l_ext,"csv") == 0)
     {
         if ((lp = fopen(l_fich, "r"))==NULL)
         {
-            printf("Entrei aqui!!!");
             help(2);
         }
     }
@@ -213,19 +238,40 @@ int main(int argc, char *argv[])
             help(2);
         }
     }
-
     else
     {
         help(2);
     }
 
+    //Tipo de escrita
+    if(strcmp(e_ext,"csv") == 0)
+    {
+        if ((ep = fopen(e_fich, "w"))==NULL)
+        {
+            help(2);
+        }
+    }
+    else if((strcmp(e_ext,"dat")) == 0)
+    {
+        if ((ep = fopen(e_fich, "wb"))==NULL)
+        {
+            help(2);
+        }
+    }
+    else
+    {
+        help(2);
+    }
+    linha* head = NULL;
+    //Leitura do ficheiro
     if (fgets(ler, max_linha, lp)==NULL)
     {
         help(2);
     }
-    printf("%s \n", ler+3); //titulo
-    linha* head = NULL;
-
+    if(strcmp(e_ext,"csv") == 0)
+    {
+        fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n"); //titulo
+    }
     // Ler linhas
     while(fgets(ler, max_linha, lp)!=NULL)
     {
@@ -234,18 +280,14 @@ int main(int argc, char *argv[])
     linha* atual;
     for (atual = head ; atual != NULL; atual = atual->next)
     {
-        printf("%s / %s / %s / %d / %s / %d / %s / %.9f / %d\n\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
+        //printf("%s / %s / %s / %d / %s / %d / %s / %.9f / %d\n\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
+        //depois apagar o printf
+        fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
     }
     apagar(head);
     fclose(lp);
-
-    /*printf("ficheiro a ler - %s \n", l_fich);
-    printf("ficheiro a ler - %s.%s\n", l_fich, l_ext);
-    printf("ficheiro a escrever - %s.%s\n", efich, e_ext);
-    printf("L - %s \n", leitura);
-    printf("P - %s  %d\n", ordem, numero);
-    printf("%d-%d\n", ano1, semana1);
-    printf("%d-%d\n", ano2, semana2);           //so para teste, depois apagar*/
+    fclose(ep);
+    printf("O seu ficheiro foi concluido!\n");
     return 0;
 
 }

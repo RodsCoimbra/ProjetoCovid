@@ -30,23 +30,23 @@ pais *inserir_paises (struct detalhes **head, int popu, char cont, char pais, ch
 
 //  insert lists of integers in a list
 
-detalhes *inserir_detalhes (struct pais **pais_list,struct detalhes *head){
-    struct list *temp,*current;
-    temp=malloc(sizeof(struct list));
-    temp->start=head;
-    temp->listnext=NULL;
+detalhes *inserir_detalhes (pais **pais_list, detalhes *head){
+    pais *aux,*atual;
+    aux=(pais*)malloc(sizeof(pais));
+    aux->nextD = head;
+    aux->nextD->nextD = NULL;
     if((*pais_list)==NULL){
-        (*pais_list)=temp;
+        (*pais_list) = aux;
     }
     else{
-        current=(*pais_list);
-        while(current->listnext!=NULL){
-            current=current->listnext;
+        atual=(*pais_list);
+        while(atual->nextD!=NULL){
+            atual=atual->nextD;
         }
-        current->listnext=temp;
+        atual->nextD=aux;
+    
     }
 }
-
 /*
 int main(int argc, char arg[]) {
     pais* root = malloc(sizeof(pais));
