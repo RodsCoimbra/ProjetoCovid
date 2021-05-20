@@ -61,8 +61,31 @@ void help(int helpvar)
     exit(-1);
 }
 
+
+int verificacao(char* cod_pais,Pais* head){
+    Pais* aux;
+    int flag = 0;
+    if (head == NULL)
+    {
+        return flag;
+    }
+    for(aux = head;aux != NULL;aux = aux->nextP){
+        if(strcmp(cod_pais,aux->cod_pais) == 0){
+        flag = 1;
+        break;
+        }
+    }
+    return flag;
+}
+
 Pais* criar(Pais* head, char* pais, char* cod_pais, char* cont,  int popu)
 {
+    int flag;
+    flag= verificacao(cod_pais, head);
+    if (flag){
+        return head;
+    }
+
     Pais* novo = (Pais*) malloc (sizeof(Pais));
     Detalhes* deta = (Detalhes*) malloc(sizeof(Detalhes)); //deta=*detalhes
 
@@ -324,6 +347,7 @@ int main(int argc, char *argv[])
         separar(',', ler,'\0');
         sscanf(pend2, " %d", &(novo->n_dorc));*/
         head = criar (head, aux.pais, aux.cod_pais, aux.cont, aux.popu);
+
     }
     Pais* atual;
     for (atual = head ; atual != NULL; atual = atual->nextP)
