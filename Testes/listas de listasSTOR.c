@@ -38,7 +38,7 @@ int main()
         NewStudent = cria_aluno(i);
         // Insere Elemento
         //ListHead = insere_aluno_na_listaordenada(ListHead, NewStudent);
-        //ListHead = insere_aluno_no_fim_lista(ListHead, NewStudent);
+        ////ListHead = insere_aluno_no_fim_lista(ListHead, NewStudent);
         ListHead = insere_aluno_no_topo_lista(ListHead, NewStudent);
     }
     // Apresenta Lista

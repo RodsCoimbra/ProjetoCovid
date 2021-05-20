@@ -5,25 +5,25 @@
 #define maxficheiro 259 //numero max de carateres de ficheiros no windows
 #define max_linha 120
 
-typedef struct detalhes { // lista que está dentro da lista "pais"
+typedef struct Detalhes { // lista que está dentro da lista "pais"
     int n_dorc; // numero de deaths or cases
     int week_count;
     int year_week;
     float lastfteen;
     char indic[7];
-    struct detalhes *nextD; // nextD é o pointer do detalhe seguinte
-} detalhes;
+    struct Detalhes *nextD; // nextD é o pointer do detalhe seguinte
+} Detalhes;
 
-typedef struct pais {
+typedef struct Pais {
     char pais[35];
     char cod_pais[4];
     char cont[8];
     int popu;
-    detalhes *nextD;
-    struct pais *nextP; // nextP é o pointer do pais seguinte
-} pais;
+    Detalhes *nextD;
+    struct Pais *nextP; // nextP é o pointer do pais seguinte
+} Pais;
 
-void inserir_detalhes (pais **pais_list, detalhes *head, int n_dorc, int week_count, int year_week, float lastfteen, char indic[7]){
+/*void inserir_detalhes (pais **pais_list, detalhes *head, int n_dorc, int week_count, int year_week, float lastfteen, char indic[7]){
     pais *aux,*atual;
     aux=(pais*)malloc(sizeof(pais));
     aux->nextD = head;
@@ -40,16 +40,10 @@ void inserir_detalhes (pais **pais_list, detalhes *head, int n_dorc, int week_co
 }
 
 pais *inserir_paises (struct detalhes **head, int popu, char cont, char pais, char cod_pais){
-    
-}
 
-/** \brief
-*
-* \param
-* \param
-* \return
-*
-*/
+}*/
+
+
 void help(int helpvar)
 {
     switch (helpvar)
@@ -66,6 +60,40 @@ void help(int helpvar)
     }
     exit(-1);
 }
+
+Pais* criar(Pais* head, char* pais, char* cod_pais, char* cont,  int popu)
+{
+    Pais* novo = (Pais*) malloc (sizeof(Pais));
+    Detalhes* deta = (Detalhes*) malloc(sizeof(Detalhes)); //deta=*detalhes
+
+    if (novo == NULL)
+    {
+        help(3);
+    }
+    if (deta == NULL)
+    {
+        help(3);
+    }
+    novo->popu = popu;
+    strcpy(novo->cont, cont);
+    strcpy(novo->pais, pais);
+    strcpy(novo->cod_pais, cod_pais);
+    if (head == NULL){
+        novo->nextP = NULL;
+        novo->nextD = deta;
+        return novo;
+    }
+    Pais* aux = head;
+    while(aux->nextP != NULL){
+         aux = aux->nextP;
+    }
+    aux->nextP = novo;
+    aux->nextD = deta;
+    return head;
+}
+
+
+
 
 
 /** \brief
@@ -91,7 +119,7 @@ char* separar(char sep, char* str, char troca)
     return psep;
 }
 
-void criar(linha** ende, char* ler)  // ende=endereço
+/* void criar(linha** ende, char* ler)  // ende=endereço
 {
     char *pend, *pend2;
     linha* novo = (linha*) malloc (sizeof(linha));
@@ -132,11 +160,11 @@ void criar(linha** ende, char* ler)  // ende=endereço
         atual = atual->next;
     }
     atual->next = novo;
-}
+}*/
 
 
 
-void apagar(linha* ende)
+/*void apagar(linha* ende)
 {
 
     linha* aux;
@@ -147,7 +175,7 @@ void apagar(linha* ende)
         ende = ende->next;
         free(aux);
     }
-}
+}*/
 
 
 
@@ -162,7 +190,7 @@ void apagar(linha* ende)
 int main(int argc, char *argv[])
 {
     int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
-    char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend;
+    char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend, *pend2;
     opterr = 0;
     while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informacoes do utilizador no incio do programa
     {
@@ -262,7 +290,7 @@ int main(int argc, char *argv[])
     {
         help(2);
     }
-    linha* head = NULL;
+    Pais* head = NULL;
     //Leitura do ficheiro
     if (fgets(ler, max_linha, lp)==NULL)
     {
@@ -273,18 +301,39 @@ int main(int argc, char *argv[])
         fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n"); //titulo
     }
     // Ler linhas
-    while(fgets(ler, max_linha, lp)!=NULL)
-    {
-        criar (&head, ler);
+    Pais aux;
+
+    while(fgets(ler, max_linha, lp)!= NULL){
+        pend = separar(',', ler,'\0');
+        sscanf(ler, " %[^,]", aux.pais);  //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
+        pend2 = separar(',', ler,'\0');
+        sscanf(pend, " %s", aux.cod_pais);
+        pend = separar(',', ler,'\0');
+        sscanf(pend2, " %s", aux.cont);
+        pend2 = separar(',', ler,'\0');
+        sscanf(pend, " %d", &(aux.popu));
+        /*pend = separar(',', ler,'\0');
+        sscanf(pend2, " %s", novo->indic);
+        pend2 = separar(',', ler,'\0');
+        sscanf(pend, " %d", &(novo->week_count));
+        pend = separar(',', ler,'\0');
+        sscanf(pend2, " %s", novo->year_week);
+        pend2 = separar(',', ler,'\0');
+        novo->lastfteen = 0;
+        sscanf(pend, " %lf", &(novo->lastfteen));
+        separar(',', ler,'\0');
+        sscanf(pend2, " %d", &(novo->n_dorc));*/
+        head = criar (head, aux.pais, aux.cod_pais, aux.cont, aux.popu);
     }
-    linha* atual;
-    for (atual = head ; atual != NULL; atual = atual->next)
+    Pais* atual;
+    for (atual = head ; atual != NULL; atual = atual->nextP)
     {
         //printf("%s / %s / %s / %d / %s / %d / %s / %.9f / %d\n\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
         //depois apagar o printf
-        fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
+        printf("%s,%s,%s,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu);
+        fprintf(ep, "%s,%s,%s,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu);//, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
     }
-    apagar(head);
+    //apagar(head);
     fclose(lp);
     fclose(ep);
     printf("O seu ficheiro foi concluido!\n");
