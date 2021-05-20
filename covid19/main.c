@@ -8,8 +8,8 @@
 typedef struct Detalhes { // lista que está dentro da lista "pais"
     int n_dorc; // numero de deaths or cases
     int week_count;
-    int year_week;
-    float lastfteen;
+    char year_week[8];
+    double lastfteen;
     char indic[7];
     struct Detalhes *nextD; // nextD é o pointer do detalhe seguinte
 } Detalhes;
@@ -62,27 +62,41 @@ void help(int helpvar)
 }
 
 
-int verificacao(char* cod_pais,Pais* head){
+Pais* verificacao(char* cod_pais,Pais* head){
     Pais* aux;
-    int flag = 0;
     if (head == NULL)
     {
-        return flag;
+        return NULL;
     }
     for(aux = head;aux != NULL;aux = aux->nextP){
         if(strcmp(cod_pais,aux->cod_pais) == 0){
-        flag = 1;
-        break;
+        return aux;
         }
     }
-    return flag;
+    return NULL;
+    }
+
+void criarD(Detalhes* deta,char* indic, int week_count, char* year_week, double lastfteen, int n_dorc){
+    Detalhes* aux = deta;
+    Detalhes* deta2 = (Detalhes*) malloc(sizeof(Detalhes));
+    while(aux->nextD != NULL){
+         aux = aux->nextD;
+    }
+    aux->nextD = deta2;
+
+    deta2->n_dorc = n_dorc;
+    deta2->lastfteen = lastfteen;
+    deta2->week_count = week_count;
+    strcpy(deta2->year_week, year_week);
+    strcpy(deta2->indic, indic);
 }
 
-Pais* criar(Pais* head, char* pais, char* cod_pais, char* cont,  int popu)
+Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char* indic, int week_count, char* year_week, double lastfteen, int n_dorc)
 {
-    int flag;
-    flag= verificacao(cod_pais, head);
-    if (flag){
+    Pais* P_atual;
+    P_atual = verificacao(cod_pais, head);
+    if (P_atual != NULL){
+        criarD(P_atual->nextD, indic, week_count, year_week, lastfteen, n_dorc);
         return head;
     }
 
@@ -112,6 +126,7 @@ Pais* criar(Pais* head, char* pais, char* cod_pais, char* cont,  int popu)
     }
     aux->nextP = novo;
     aux->nextD = deta;
+    criarD(deta, indic, week_count, year_week, lastfteen, n_dorc);
     return head;
 }
 
@@ -141,50 +156,6 @@ char* separar(char sep, char* str, char troca)
     }
     return psep;
 }
-
-/* void criar(linha** ende, char* ler)  // ende=endereço
-{
-    char *pend, *pend2;
-    linha* novo = (linha*) malloc (sizeof(linha));
-    if (novo == NULL)
-    {
-        help(3);
-    }
-    if(strcmp(ler, "12345678") != 0)
-    {
-        pend = separar(',', ler,'\0');
-        sscanf(ler, " %[^,]", novo->pais);  //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
-        pend2 = separar(',', ler,'\0');
-        sscanf(pend, " %s", novo->cod_pais);
-        pend = separar(',', ler,'\0');
-        sscanf(pend2, " %s", novo->cont);
-        pend2 = separar(',', ler,'\0');
-        sscanf(pend, " %d", &(novo->popu));
-        pend = separar(',', ler,'\0');
-        sscanf(pend2, " %s", novo->indic);
-        pend2 = separar(',', ler,'\0');
-        sscanf(pend, " %d", &(novo->week_count));
-        pend = separar(',', ler,'\0');
-        sscanf(pend2, " %s", novo->year_week);
-        pend2 = separar(',', ler,'\0');
-        novo->lastfteen = 0;
-        sscanf(pend, " %lf", &(novo->lastfteen));
-        separar(',', ler,'\0');
-        sscanf(pend2, " %d", &(novo->n_dorc));
-    }
-    if (*ende == NULL)
-    {
-        *ende = novo;
-        return;
-    }
-    linha* atual = *ende;
-    while(atual->next != NULL)
-    {
-        atual = atual->next;
-    }
-    atual->next = novo;
-}*/
-
 
 
 /*void apagar(linha* ende)
@@ -325,7 +296,7 @@ int main(int argc, char *argv[])
     }
     // Ler linhas
     Pais aux;
-
+    Detalhes aux2;
     while(fgets(ler, max_linha, lp)!= NULL){
         pend = separar(',', ler,'\0');
         sscanf(ler, " %[^,]", aux.pais);  //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
@@ -335,27 +306,29 @@ int main(int argc, char *argv[])
         sscanf(pend2, " %s", aux.cont);
         pend2 = separar(',', ler,'\0');
         sscanf(pend, " %d", &(aux.popu));
-        /*pend = separar(',', ler,'\0');
-        sscanf(pend2, " %s", novo->indic);
-        pend2 = separar(',', ler,'\0');
-        sscanf(pend, " %d", &(novo->week_count));
         pend = separar(',', ler,'\0');
-        sscanf(pend2, " %s", novo->year_week);
+        sscanf(pend2, " %s", aux2.indic);
         pend2 = separar(',', ler,'\0');
-        novo->lastfteen = 0;
-        sscanf(pend, " %lf", &(novo->lastfteen));
+        sscanf(pend, " %d", &(aux2.week_count));
+        pend = separar(',', ler,'\0');
+        sscanf(pend2, " %s", aux2.year_week);
+        pend2 = separar(',', ler,'\0');
+        aux2.lastfteen = 0;         //como este número pode não ter dados, assume-se como 0
+        sscanf(pend, " %lf", &(aux2.lastfteen));
         separar(',', ler,'\0');
-        sscanf(pend2, " %d", &(novo->n_dorc));*/
-        head = criar (head, aux.pais, aux.cod_pais, aux.cont, aux.popu);
-
+        sscanf(pend2, " %d", &(aux2.n_dorc));
+        head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
     }
     Pais* atual;
-    for (atual = head ; atual != NULL; atual = atual->nextP)
+    Detalhes* atual2;
+    for (atual = head ; atual != NULL; atual = atual->nextP){
+    for (atual2 = atual->nextD; atual2 != NULL; atual2 = atual2->nextD)
     {
         //printf("%s / %s / %s / %d / %s / %d / %s / %.9f / %d\n\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
         //depois apagar o printf
-        printf("%s,%s,%s,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu);
-        fprintf(ep, "%s,%s,%s,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu);//, atual->indic, atual->week_count, atual->year_week, atual->lastfteen, atual->n_dorc);
+        printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+        fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+    }
     }
     //apagar(head);
     fclose(lp);
