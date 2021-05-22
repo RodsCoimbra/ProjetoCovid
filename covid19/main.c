@@ -15,7 +15,7 @@ typedef struct Detalhes { // lista que está dentro da lista "pais"
 } Detalhes;
 
 typedef struct Pais {
-    char pais[35];
+    char pais[25];
     char cod_pais[4];
     char cont[8];
     int popu;
@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
     Detalhes aux2;
 
 if ((strcmp(l_ext,"dat")) == 0){
-        while(feof(lp) == 0){
+        while(1){
         fread(aux.pais, sizeof(aux.pais), 1, lp);
         fread(aux.cod_pais, sizeof(aux.cod_pais), 1, lp);
         fread(aux.cont, sizeof(aux.cont), 1, lp);
@@ -308,6 +308,8 @@ if ((strcmp(l_ext,"dat")) == 0){
         fread(aux2.year_week, sizeof(aux2.year_week), 1, lp);
         fread(&aux2.lastfteen, sizeof(aux2.lastfteen), 1, lp);
         fread(&aux2.n_dorc, sizeof(aux2.n_dorc), 1, lp);
+        if(feof(lp) != 0){
+                break;}
         fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
 }}
 
