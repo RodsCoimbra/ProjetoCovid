@@ -181,7 +181,7 @@ void apagar(Pais* head)
 int main(int argc, char *argv[])
 {
     int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
-    char ordem[6] = {""}, leitura[35], selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend, *pend2;
+    char ordem[6] = {""}, leitura[35] = "all", selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend, *pend2;
     opterr = 0;
     while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informacoes do utilizador no incio do programa
     {
@@ -297,7 +297,7 @@ int main(int argc, char *argv[])
     Detalhes aux2;
 
 if ((strcmp(l_ext,"dat")) == 0){
-        while(feof(lp) == 0){
+        while(1){
         fread(aux.pais, sizeof(aux.pais), 1, lp);
         fread(aux.cod_pais, sizeof(aux.cod_pais), 1, lp);
         fread(aux.cont, sizeof(aux.cont), 1, lp);
@@ -307,6 +307,8 @@ if ((strcmp(l_ext,"dat")) == 0){
         fread(aux2.year_week, sizeof(aux2.year_week), 1, lp);
         fread(&aux2.lastfteen, sizeof(aux2.lastfteen), 1, lp);
         fread(&aux2.n_dorc, sizeof(aux2.n_dorc), 1, lp);
+        if(feof(lp) != 0){
+                break;}
         fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
 }}
 
@@ -331,6 +333,9 @@ else{
         sscanf(pend, " %lf", &(aux2.lastfteen));
         separar(',', ler,',');
         sscanf(pend2, " %d", &(aux2.n_dorc));
+        if(strcmp(leitura, "all") != 0 && strcmp(leitura, aux.cont) != 0){
+            continue;
+        }
         head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
     }}
     Pais* atual;
@@ -352,17 +357,17 @@ else{
         }
 
        else{
-        //printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+        printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
         //depois apagar o printf
 
-        fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+        fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
     }
     }}
 
     apagar(head);
     fclose(lp);
     fclose(ep);
-    printf("\nO seu ficheiro foi concluido!\n");
+    printf("O seu ficheiro foi concluido! O conteudo foi escrito no ficheiro %s \n",e_fich);
     return 0;
 
 }
