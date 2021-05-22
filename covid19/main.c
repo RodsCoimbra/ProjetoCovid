@@ -6,11 +6,11 @@
 #define max_linha 120
 
 typedef struct Detalhes { // lista que está dentro da lista "pais"
-    int n_dorc; // numero de deaths or cases
+    char indic[7];
     int week_count;
     char year_week[8];
     double lastfteen;
-    char indic[7];
+    int n_dorc; // numero de deaths or cases
     struct Detalhes *nextD; // nextD é o pointer do detalhe seguinte
 } Detalhes;
 
@@ -22,6 +22,23 @@ typedef struct Pais {
     Detalhes *nextD;
     struct Pais *nextP; // nextP é o pointer do pais seguinte
 } Pais;
+
+/*
+typedef union Pais_U{
+    char pais[35];
+    char cod_pais[4];
+    char cont[8];
+    int popu;
+    } Pais_U;
+
+
+typedef union Detalhes_U{
+    int n_dorc;
+    double lastfteen;
+    char year_week[8];
+    int week_count;
+    char indic[7];
+} Detalhes_U;*/
 
 void help(int helpvar)
 {
@@ -57,7 +74,7 @@ Pais* verificacao(char* cod_pais,Pais* head){
 
 void criarD(Detalhes* deta,char* indic, int week_count, char* year_week, double lastfteen, int n_dorc){
     Detalhes* aux = deta;
-    Detalhes* deta2 = (Detalhes*) malloc(sizeof(Detalhes));
+    Detalhes* deta2 = (Detalhes*) calloc(1,sizeof(Detalhes));
     while(aux->nextD != NULL){
          aux = aux->nextD;
     }
@@ -79,8 +96,8 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
         return head;
     }
 
-    Pais* novo = (Pais*) malloc (sizeof(Pais));
-    Detalhes* deta = (Detalhes*) malloc(sizeof(Detalhes)); //deta=*detalhes
+    Pais* novo = (Pais*) calloc (1,sizeof(Pais));
+    Detalhes* deta = (Detalhes*) calloc(1,sizeof(Detalhes)); //deta=*detalhes
 
     if (novo == NULL)
     {
@@ -132,7 +149,7 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
 char* separar(char sep, char* str, char troca)
 {
     int i;
-    char *psep = NULL;
+    char* psep = NULL;
     for(i=0; str[i] != EOF ; i++)
     {
         if(str[i] == sep)
@@ -291,6 +308,18 @@ int main(int argc, char *argv[])
     // Ler linhas
     Pais aux;
     Detalhes aux2;
+
+
+    /*if ((strcmp(l_ext,"dat")) == 0){
+    while(fread(ler, sizeof(Pais_U), 1, lp)!= 0){
+        fprintf(ep,"\n%s ", ler);
+        //while(fread(ler, sizeof(Detalhes_U), 1, lp)!= 0){
+        fprintf(ep,"%s ", ler);
+}}     //-i covid19_w_t01.csv -o escrita.dat -L all -P min 5000
+     //-i escrita.dat -o escrita.csv -L all -P min 5000*/ /// Ainda nao funciona
+
+
+    //else{
     while(fgets(ler, max_linha, lp)!= NULL){
         pend = separar(',', ler,'\0');
         sscanf(ler, " %[^,]", aux.pais);  //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
@@ -309,21 +338,31 @@ int main(int argc, char *argv[])
         pend2 = separar(',', ler,'\0');
         aux2.lastfteen = 0;         //como este número pode não ter dados, assume-se como 0
         sscanf(pend, " %lf", &(aux2.lastfteen));
-        separar(',', ler,'\0');
+        separar(',', ler,',');
         sscanf(pend2, " %d", &(aux2.n_dorc));
         head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
     }
     Pais* atual;
     Detalhes* atual2;
+
     for (atual = head ; atual != NULL; atual = atual->nextP){
-    for (atual2 = atual->nextD; atual2 != NULL; atual2 = atual2->nextD)
-    {
-        printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+    for (atual2 = atual->nextD; atual2 != NULL; atual2 = atual2->nextD){
+
+
+        /*if(strcmp(e_ext,"dat") == 0){
+        fwrite(atual, sizeof(Pais), 1, ep);
+        //fwrite(atual2, sizeof(Detalhes), 1, ep);
+        }*/           ///Ainda nao funciona
+
+       /// else{
+        //printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
         //depois apagar o printf
+
         fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
-    }
-    }
-    apagar(head);
+    ///}
+    }}
+
+    apagar(head);//}
     fclose(lp);
     fclose(ep);
     printf("\nO seu ficheiro foi concluido!\n");
