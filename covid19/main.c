@@ -39,9 +39,6 @@ void help(int helpvar)
     case 4:
         printf("O ficheiro de entrada não tem dados.");
         break;
-    case 5:
-        printf("O argumento de ordenacao nao existe.");
-        break;
     }
     printf("\nErro. Depois mudar"); // escrever instruções do programa
     exit(-1);
@@ -126,16 +123,6 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
 }
 
 
-
-
-
-/** \brief
-*
-* \param sep char
-* \param str char*
-* \return char*
-*
-*/
 char* separar(char sep, char* str, char troca)
 {
     int i;
@@ -172,9 +159,27 @@ void apagar(Pais* head)
     }
 }
 
-Pais* ordenar(Pais* head, int ordena){
+int valores(Pais* head_pais, int ordena, char*semana){
+Detalhes* atual;
+if(ordena == 3){
+for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD){
+    if((strcmp(atual->indic,"cases")==0) && (strcmp(atual->year_week, semana) ==0)){
+        return atual->n_dorc;
+}}
+return 0;}
 
-    int flag = 0;
+if(ordena == 4){
+for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD){
+    if((strcmp(atual->indic,"deaths")==0) && (strcmp(atual->year_week, semana) ==0)){
+        return atual->n_dorc;
+}}}
+return 0;}
+
+
+//1 - alfa; 2-pop; 3-inf; 4-dea;
+Pais* ordenar(Pais* head, int ordena, char* semana){
+
+    int flag = 0, x = 0, y = 0;
     Pais* esq, *drt, *paux, aux, *d, *e;
     paux = &aux;            //Cria auxiliar antes, pois vai mexer nos dois blocos da frente
     paux->nextP = head;
@@ -182,9 +187,14 @@ Pais* ordenar(Pais* head, int ordena){
             esq = paux;
             drt = paux -> nextP;
             flag = 1;
+
             while(drt-> nextP != NULL)
             {
-                if ((strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 1) || ( (drt->popu) < (drt->nextP->popu) && ordena == 2))
+                if(ordena == 3 || ordena == 4){
+                x = valores(drt, ordena, semana);
+                y = valores(drt->nextP, ordena, semana);
+            }
+                if ((strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 1 )|| ((drt->popu) < (drt->nextP->popu) && ordena == 2) || (x < y) ||(x==y && strcmp(drt->pais, drt->nextP->pais) > 0 && (ordena == 3 || ordena == 4)))
                 {
                     flag = 0;
                     d = esq->nextP;
@@ -217,26 +227,26 @@ int main(int argc, char *argv[])
 {
     int opt, numero = 0;
     char restricao[6], leitura[8] = "all", selecao[9], ordenacao[5] = "alfa", l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend, *pend2;
-    char ano1[8], ano2[8], anod[8];
+    char ano1[8], ano2[8], ano_ord[8];
     opterr = 0;
     while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informacoes do utilizador no incio do programa
     {
         switch (opt)
         {
         case 'P':
-            sscanf(optarg," %s", ordem);
-            if (strcmp("min", ordem) == 0 || strcmp("max", ordem) == 0)
+            sscanf(optarg," %s", restricao);
+            if (strcmp("min", restricao) == 0 || strcmp("max", restricao) == 0)
             {
-                sscanf(optarg + strlen(ordem) + 1," %d", &numero);
+                sscanf(optarg + strlen(restricao) + 1," %d", &numero);
             }
-            else if (strcmp("date", ordem) == 0)
+            else if (strcmp("date", restricao) == 0)
             {
-                sscanf(optarg + strlen(ordem) + 1," %s", ano1);
+                sscanf(optarg + strlen(restricao) + 1," %s", ano1);
             }
-            else if (strcmp("dates", ordem) == 0)
+            else if (strcmp("dates", restricao) == 0)
             {
-                sscanf(optarg + strlen(ordem) + 1," %s", ano1);
-                sscanf(optarg + strlen(ordem) +strlen(ano1) + 2," %s", ano2);
+                sscanf(optarg + strlen(restricao) + 1," %s", ano1);
+                sscanf(optarg + strlen(restricao) +strlen(ano1) + 2," %s", ano2);
             }
             else
             {
@@ -253,7 +263,10 @@ int main(int argc, char *argv[])
             sscanf(optarg," %s", ordenacao);
             if (strcmp("inf", ordenacao) == 0 || strcmp("dea", ordenacao) == 0)
             {
-                sscanf(optarg + strlen(ordenacao) + 1," %s", anod);
+                sscanf(optarg + strlen(ordenacao) + 1," %s", ano_ord);
+            }
+            else {
+                help(1);
             }
             break;
 
@@ -275,7 +288,6 @@ int main(int argc, char *argv[])
         }
         }
     }
-    printf("%s  %s  %s\n",ordem, ano1, ano2);
     FILE *lp;
     FILE *ep;
     //Tipo de leitura
@@ -376,20 +388,20 @@ else{
     }}
     if(head != NULL && head->nextP != NULL){
         if(strcmp(ordenacao,"alfa") == 0){
-        head = ordenar(head, 1);
+        head = ordenar(head, 1," ");
         }
         else if(strcmp(ordenacao,"pop") == 0){
-        head = ordenar(head, 2);
+        head = ordenar(head, 2," ");
         }
         else if(strcmp(ordenacao,"inf") == 0){
-        //ordenar(???);
+        head = ordenar(head, 3, ano_ord);
         }
         else if(strcmp(ordenacao,"dea") == 0){
-        //ordenar(???);
+        head = ordenar(head, 4, ano_ord);
         }
         else{
         apagar(head);
-        help(5);
+        help(1);
         }}
     Pais* atual;
     Detalhes* atual2;
@@ -425,4 +437,5 @@ else{
 
 }
       /// -i covid19_w_t01.csv -o escrita.csv -L all
+      /// -i covid19_w_t01.csv -o escrita.dat -L all
      ///  -i escrita.dat -o escrita.csv -L all -P min 5000*/ /// Ainda nao funciona
