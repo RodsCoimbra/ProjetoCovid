@@ -4,6 +4,7 @@
 #include <getopt.h>
 #define maxficheiro 259 //numero max de carateres de ficheiros no windows
 #define max_linha 120
+
 typedef struct Detalhes { // lista que está dentro da lista "pais"
     char indic[7];
     int week_count;
@@ -36,10 +37,13 @@ void help(int helpvar)
         printf("Nao foi possivel alocar memória.");
         break;
     case 4:
-        printf("Ficheiro de entrada.");
+        printf("O ficheiro de entrada não tem dados.");
+        break;
+    case 5:
+        printf("O argumento de ordenacao nao existe.");
         break;
     }
-
+    printf("\nErro. Depois mudar"); // escrever instruções do programa
     exit(-1);
 }
 
@@ -168,9 +172,40 @@ void apagar(Pais* head)
     }
 }
 
+Pais* ordenar(Pais* head, int ordena){
 
-
-
+    int flag = 0;
+    Pais* esq, *drt, *paux, aux, *d, *e;
+    paux = &aux;            //Cria auxiliar antes, pois vai mexer nos dois blocos da frente
+    paux->nextP = head;
+    while(flag == 0){
+            esq = paux;
+            drt = paux -> nextP;
+            flag = 1;
+            while(drt-> nextP != NULL)
+            {
+                if ((strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 1) || ( (drt->popu) < (drt->nextP->popu) && ordena == 2))
+                {
+                    flag = 0;
+                    d = esq->nextP;
+                    //
+                    e = drt->nextP->nextP;
+                    //
+                    esq->nextP = drt->nextP;
+                    //
+                    drt->nextP->nextP = d;
+                    //
+                    drt->nextP = e;
+                }
+                esq = drt;
+                if (drt->nextP != NULL){
+                    drt = drt->nextP;
+                }
+            }
+        }
+    head = paux->nextP;
+    return head;
+}
 /** \brief
  *
  * \param argc int
@@ -180,8 +215,9 @@ void apagar(Pais* head)
  */
 int main(int argc, char *argv[])
 {
-    int opt, numero = 0, semana1, semana2, ano1, ano2, anod, semanad;
-    char ordem[6] = {""}, leitura[35] = "all", selecao[9], ordenacao[5], l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend, *pend2;
+    int opt, numero = 0;
+    char restricao[6], leitura[8] = "all", selecao[9], ordenacao[5] = "alfa", l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend, *pend2;
+    char ano1[8], ano2[8], anod[8];
     opterr = 0;
     while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informacoes do utilizador no incio do programa
     {
@@ -191,16 +227,16 @@ int main(int argc, char *argv[])
             sscanf(optarg," %s", ordem);
             if (strcmp("min", ordem) == 0 || strcmp("max", ordem) == 0)
             {
-                sscanf(optarg + 4," %d", &numero);
+                sscanf(optarg + strlen(ordem) + 1," %d", &numero);
             }
             else if (strcmp("date", ordem) == 0)
             {
-                sscanf(optarg + 5," %d-%d", &ano1, &semana1);
+                sscanf(optarg + strlen(ordem) + 1," %s", ano1);
             }
             else if (strcmp("dates", ordem) == 0)
             {
-                sscanf(optarg + 6," %d-%d", &ano1, &semana1);
-                sscanf(optarg + 14," %d-%d", &ano2, &semana2);
+                sscanf(optarg + strlen(ordem) + 1," %s", ano1);
+                sscanf(optarg + strlen(ordem) +strlen(ano1) + 2," %s", ano2);
             }
             else
             {
@@ -217,7 +253,7 @@ int main(int argc, char *argv[])
             sscanf(optarg," %s", ordenacao);
             if (strcmp("inf", ordenacao) == 0 || strcmp("dea", ordenacao) == 0)
             {
-                sscanf(optarg + 4," %d-%d", &anod, &semanad);
+                sscanf(optarg + strlen(ordenacao) + 1," %s", anod);
             }
             break;
 
@@ -239,7 +275,7 @@ int main(int argc, char *argv[])
         }
         }
     }
-
+    printf("%s  %s  %s\n",ordem, ano1, ano2);
     FILE *lp;
     FILE *ep;
     //Tipo de leitura
@@ -338,6 +374,23 @@ else{
         }
         head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
     }}
+    if(head != NULL && head->nextP != NULL){
+        if(strcmp(ordenacao,"alfa") == 0){
+        head = ordenar(head, 1);
+        }
+        else if(strcmp(ordenacao,"pop") == 0){
+        head = ordenar(head, 2);
+        }
+        else if(strcmp(ordenacao,"inf") == 0){
+        //ordenar(???);
+        }
+        else if(strcmp(ordenacao,"dea") == 0){
+        //ordenar(???);
+        }
+        else{
+        apagar(head);
+        help(5);
+        }}
     Pais* atual;
     Detalhes* atual2;
 
@@ -371,5 +424,5 @@ else{
     return 0;
 
 }
-      /// -i covid19_w_t01.csv -o escrita.dat -L all -P min 5000
+      /// -i covid19_w_t01.csv -o escrita.csv -L all
      ///  -i escrita.dat -o escrita.csv -L all -P min 5000*/ /// Ainda nao funciona
