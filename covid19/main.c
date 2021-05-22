@@ -40,7 +40,17 @@ void help(int helpvar)
         printf("O ficheiro de entrada não tem dados.");
         break;
     }
-    printf("\nErro. Depois mudar"); // escrever instruções do programa
+    printf("\n### Menu Ajuda ###\n");
+    printf("Metodo de introducao de argumentos\n");
+    printf("./covid19 [argumento1] [argumento2] ... [argumentoN] -> Inicializa o programa com as carateristicas definidas nos argumentos\n");
+    printf("Argumentos de Leitura:\n ");
+    printf("    -L all          Mostra todos os dados do ficheiro introduzido\n    -L nome_do_continente        Mostra todos os dados referentes a um continente ");
+    printf("Argumentos de Ordenacao de Dados:\n ");
+    printf("    -S alfa         Ordena os paises por ordem alfabetica\n     -S  pop         Ordena de forma decrescente a populacao dos paises\n    -S inf yyyy-ww          Ordena de forma decrescente o numero total de infetados por pais na data especificada\n     -S dea yyyy-ww          Ordena de forma decrescente o numero total de mortes por pais na data especificada\n");
+    printf("Argumentos de Selecao de Dados:\n ");
+    printf("    -D inf          Seleciona a semana com mais infetados de cada pais\n    -D dea          Seleciona a semana com mais mortes de cada pais\n   -D racioinf         Seleciona a semana com o maior racio de infetados por 100000 habitantes\n   -D raciodea         Seleciona a semana com o maior racio de mortes por 100000 habitantes");
+    printf("Argumentos de Rstricao de Dados:\n ");
+    printf("    -P\n ");
     exit(-1);
 }
 
@@ -164,17 +174,16 @@ Detalhes* atual;
 if(ordena == 3){
 for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD){
     if((strcmp(atual->indic,"cases")==0) && (strcmp(atual->year_week, semana) ==0)){
-        return atual->n_dorc;
-}}
-return 0;}
+        return atual->week_count;}}
+}
 
-if(ordena == 4){
+else if(ordena == 4){
 for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD){
     if((strcmp(atual->indic,"deaths")==0) && (strcmp(atual->year_week, semana) ==0)){
-        return atual->n_dorc;
-}}}
-return 0;}
-
+        return atual->week_count;}}
+}
+return 0;
+}
 
 //1 - alfa; 2-pop; 3-inf; 4-dea;
 Pais* ordenar(Pais* head, int ordena, char* semana){
@@ -198,13 +207,9 @@ Pais* ordenar(Pais* head, int ordena, char* semana){
                 {
                     flag = 0;
                     d = esq->nextP;
-                    //
                     e = drt->nextP->nextP;
-                    //
                     esq->nextP = drt->nextP;
-                    //
                     drt->nextP->nextP = d;
-                    //
                     drt->nextP = e;
                 }
                 esq = drt;
@@ -422,7 +427,7 @@ else{
         }
 
        else{
-        printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+        //printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
         //depois apagar o printf
 
         fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
@@ -432,7 +437,7 @@ else{
     apagar(head);
     fclose(lp);
     fclose(ep);
-    printf("O seu ficheiro foi concluido! O conteudo foi escrito no ficheiro %s \n",e_fich);
+    printf("\nO seu ficheiro foi concluido! O conteudo foi escrito no ficheiro %s \n\n",e_fich);
     return 0;
 
 }
