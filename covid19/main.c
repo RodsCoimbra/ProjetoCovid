@@ -4,7 +4,6 @@
 #include <getopt.h>
 #define maxficheiro 259 //numero max de carateres de ficheiros no windows
 #define max_linha 120
-
 typedef struct Detalhes { // lista que está dentro da lista "pais"
     int n_dorc; // numero de deaths or cases
     int week_count;
