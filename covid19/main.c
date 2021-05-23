@@ -40,7 +40,18 @@ void help(int helpvar)
         printf("O ficheiro de entrada não tem dados.");
         break;
     }
-    printf("\nErro. Depois mudar"); // escrever instruções do programa
+    printf("\n### Menu Ajuda ###\n");
+printf("\n### Menu Ajuda ###\n");
+printf("Metodo de introducao de argumentos\n");
+printf("./covid19 [argumento1] [argumento2] ... [argumentoN] -> Inicializa o programa com as carateristicas definidas nos argumentos\n");
+printf("Argumentos de Leitura:\n ");
+printf("    -L all          Mostra todos os dados do ficheiro introduzido\n    -L nome_do_continente        Mostra todos os dados referentes a um continente ");
+printf("Argumentos de Ordenacao de Dados:\n ");
+printf("    -S alfa         Ordena os paises por ordem alfabetica\n     -S  pop         Ordena de forma decrescente a populacao dos paises\n    -S inf yyyy-ww          Ordena de forma decrescente o numero total de infetados por pais na data especificada\n     -S dea yyyy-ww          Ordena de forma decrescente o numero total de mortes por pais na data especificada\n");
+printf("Argumentos de Selecao de Dados:\n ");
+printf("    -D inf          Seleciona a semana com mais infetados de cada pais\n    -D dea          Seleciona a semana com mais mortes de cada pais\n   -D racioinf         Seleciona a semana com o maior racio de infetados por 100000 habitantes\n   -D raciodea         Seleciona a semana com o maior racio de mortes por 100000 habitantes");
+printf("Argumentos de Rstricao de Dados:\n ");
+printf("    -P min n        \n ");
     exit(-1);
 }
 
