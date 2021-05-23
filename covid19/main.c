@@ -175,17 +175,16 @@ Detalhes* atual;
 if(ordena == 3){
 for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD){
     if((strcmp(atual->indic,"cases")==0) && (strcmp(atual->year_week, semana) ==0)){
-        return atual->n_dorc;
-}}
-return 0;}
+        return atual->week_count;}}
+}
 
-if(ordena == 4){
+else if(ordena == 4){
 for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD){
     if((strcmp(atual->indic,"deaths")==0) && (strcmp(atual->year_week, semana) ==0)){
-        return atual->n_dorc;
-}}}
-return 0;}
-
+        return atual->week_count;}}
+}
+return 0;
+}
 
 //1 - alfa; 2-pop; 3-inf; 4-dea;
 Pais* ordenar(Pais* head, int ordena, char* semana){
@@ -209,13 +208,9 @@ Pais* ordenar(Pais* head, int ordena, char* semana){
                 {
                     flag = 0;
                     d = esq->nextP;
-                    //
                     e = drt->nextP->nextP;
-                    //
                     esq->nextP = drt->nextP;
-                    //
                     drt->nextP->nextP = d;
-                    //
                     drt->nextP = e;
                 }
                 esq = drt;
@@ -433,7 +428,7 @@ else{
         }
 
        else{
-        printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+        //printf("%s,%s,%s,%d,%s,%d,%s,%.9f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
         //depois apagar o printf
 
         fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
@@ -443,7 +438,7 @@ else{
     apagar(head);
     fclose(lp);
     fclose(ep);
-    printf("O seu ficheiro foi concluido! O conteudo foi escrito no ficheiro %s \n",e_fich);
+    printf("\nO seu ficheiro foi concluido! O conteudo foi escrito no ficheiro %s \n\n",e_fich);
     return 0;
 
 }
