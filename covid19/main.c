@@ -40,20 +40,44 @@ void help(int helpvar)
         printf("O ficheiro de entrada não tem dados.");
         break;
     }
-printf("\n### Menu Ajuda ###\n");
-printf("\n### Menu Ajuda ###\n");
-printf("Metodo de introducao de argumentos\n");
-printf("./covid19 [argumento1] [argumento2] ... [argumentoN] -> Inicializa o programa com as carateristicas definidas nos argumentos\n");
-printf("Argumentos de Leitura:\n ");
-printf("    -L all          Mostra todos os dados do ficheiro introduzido\n    -L nome_do_continente        Mostra todos os dados referentes a um continente ");
-printf("Argumentos de Ordenacao de Dados:\n ");
-printf("    -S alfa         Ordena os paises por ordem alfabetica\n     -S  pop         Ordena de forma decrescente a populacao dos paises\n    -S inf yyyy-ww          Ordena de forma decrescente o numero total de infetados por pais na data especificada\n     -S dea yyyy-ww          Ordena de forma decrescente o numero total de mortes por pais na data especificada\n");
-printf("Argumentos de Selecao de Dados:\n ");
-printf("    -D inf          Seleciona a semana com mais infetados de cada pais\n    -D dea          Seleciona a semana com mais mortes de cada pais\n   -D racioinf         Seleciona a semana com o maior racio de infetados por 100000 habitantes\n   -D raciodea         Seleciona a semana com o maior racio de mortes por 100000 habitantes");
-printf("Argumentos de Rstricao de Dados:\n ");
-printf("    -P min n        \n ");
+    printf("\n### Menu Ajuda ###\n");
+    printf("Metodo de introducao de argumentos\n");
+    printf("./covid19 [argumento1] [argumento2] ... [argumentoN] -> Inicializa o programa com as carateristicas definidas nos argumentos\n");
+    printf("Argumentos de Leitura:\n ");
+    printf("    -L all          Mostra todos os dados do ficheiro introduzido\n    -L nome_do_continente        Mostra todos os dados referentes a um continente ");
+    printf("Argumentos de Ordenacao de Dados:\n ");
+    printf("    -S alfa         Ordena os paises por ordem alfabetica\n     -S  pop         Ordena de forma decrescente a populacao dos paises\n    -S inf yyyy-ww          Ordena de forma decrescente o numero total de infetados por pais na data especificada\n     -S dea yyyy-ww          Ordena de forma decrescente o numero total de mortes por pais na data especificada\n");
+    printf("Argumentos de Selecao de Dados:\n ");
+    printf("    -D inf          Seleciona a semana com mais infetados de cada pais\n    -D dea          Seleciona a semana com mais mortes de cada pais\n   -D racioinf         Seleciona a semana com o maior racio de infetados por 100000 habitantes\n   -D raciodea         Seleciona a semana com o maior racio de mortes por 100000 habitantes");
+    printf("Argumentos de Rstricao de Dados:\n ");
+    printf("    -P\n ");
     exit(-1);
 }
+
+
+Detalhes* selecionar (Pais* head_pais, int select){
+    Detalhes* aux = NULL;
+    Detalhes* atual;
+    Detalhes* remover = NULL;
+    int num_week = -1; //como o numero de infetados/mortos não pode ser negativo então ele guarda sempre o primeiro valor dos detalhes no aux
+    double num_racio = -1;
+    for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD){
+        if(((strcmp(atual->indic,"cases")== 0) && (atual->week_count > num_week) && (select== 1)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->week_count > num_week) && (select == 2)) || ((strcmp(atual->indic,"cases") == 0) && (atual->lastfteen > num_racio) && (select== 3)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->lastfteen > num_racio) && (select == 4))){
+            free(aux);
+            aux = atual;
+            num_week = atual->week_count;
+            num_racio = atual->lastfteen;
+        }
+        else
+        {
+            free (remover);
+            remover = atual;
+        }
+    }
+    free (remover);
+    return  aux;
+}
+
 
 
 Pais* verificacao(char* cod_pais,Pais* head){
@@ -169,6 +193,10 @@ void apagar(Pais* head)
         free(aux);
     }
 }
+
+
+
+
 
 int valores(Pais* head_pais, int ordena, char*semana){
 Detalhes* atual;
@@ -392,6 +420,28 @@ else{
         }
         head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
     }}
+    Pais* atual;
+    if(strcmp(selecao, "inf") == 0){
+    for (atual = head ; atual != NULL; atual = atual->nextP){
+      atual->nextD = selecionar(atual, 1);
+      atual->nextD->nextD = NULL;
+    }}
+    else if(strcmp(selecao, "dea") == 0){
+    for (atual = head ; atual != NULL; atual = atual->nextP){
+      atual->nextD = selecionar(atual, 2);
+      atual->nextD->nextD = NULL;
+    }}
+    else if(strcmp(selecao, "racioinf") == 0){
+    for (atual = head ; atual != NULL; atual = atual->nextP){
+      atual->nextD = selecionar(atual, 3);
+      atual->nextD->nextD = NULL;
+    }}
+    else if(strcmp(selecao, "raciodea") == 0){
+    for (atual = head ; atual != NULL; atual = atual->nextP){
+      atual->nextD = selecionar(atual, 4);
+      atual->nextD->nextD = NULL;
+    }}
+
     if(head != NULL && head->nextP != NULL){
         if(strcmp(ordenacao,"alfa") == 0){
         head = ordenar(head, 1," ");
@@ -409,7 +459,6 @@ else{
         apagar(head);
         help(1);
         }}
-    Pais* atual;
     Detalhes* atual2;
 
     for (atual = head ; atual != NULL; atual = atual->nextP){
@@ -442,6 +491,6 @@ else{
     return 0;
 
 }
-      /// -i covid19_w_t01.csv -o escrita.csv -L all
-      /// -i covid19_w_t01.csv -o escrita.dat -L all
+     /// -i covid19_w_t01.csv -o escrita.csv -L all
+     /// -i covid19_w_t01.csv -o escrita.dat -L all
      ///  -i escrita.dat -o escrita.csv -L all -P min 5000*/ /// Ainda nao funciona
