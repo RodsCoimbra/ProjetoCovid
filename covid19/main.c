@@ -40,7 +40,7 @@ void help(int helpvar)
         printf("O ficheiro de entrada não tem dados.");
         break;
     }
-    printf("\n### Menu Ajuda ###\n");
+printf("\n### Menu Ajuda ###\n");
 printf("\n### Menu Ajuda ###\n");
 printf("Metodo de introducao de argumentos\n");
 printf("./covid19 [argumento1] [argumento2] ... [argumentoN] -> Inicializa o programa com as carateristicas definidas nos argumentos\n");
