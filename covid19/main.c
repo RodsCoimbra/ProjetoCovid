@@ -39,7 +39,14 @@ void help(int helpvar)
     case 4:
         printf("O ficheiro de entrada não tem dados.");
         break;
+    case 5:
+        printf("Numero da populacao para a restricao invalido ou nao inserido.");
+        break;
+    case 6:
+        printf("Nao consegui abrir o ficheiro de escrita (possivelmente esta aberto)");
+        break;
     }
+    /*
     printf("\n### Menu Ajuda ###\n");
     printf("Metodo de introducao de argumentos\n");
     printf("./covid19 [argumento1] [argumento2] ... [argumentoN] -> Inicializa o programa com as carateristicas definidas nos argumentos\n");
@@ -50,15 +57,52 @@ void help(int helpvar)
     printf("Argumentos de Selecao de Dados:\n ");
     printf("    -D inf          Seleciona a semana com mais infetados de cada pais\n    -D dea          Seleciona a semana com mais mortes de cada pais\n   -D racioinf         Seleciona a semana com o maior racio de infetados por 100000 habitantes\n   -D raciodea         Seleciona a semana com o maior racio de mortes por 100000 habitantes");
     printf("Argumentos de Rstricao de Dados:\n ");
-    printf("    -P\n ");
+    printf("    -P\n ");*/
     exit(-1);
 }
 
 
+Pais* restringir_pop(Pais* head, int pop, int restringir){
+    Pais aux;
+    Pais* paux= &aux,*atual, *remover = NULL;
+    paux->nextP = head;
+    atual = paux;
+    while(atual->nextP !=  NULL){
+        if(((atual->nextP->popu <= pop) && (restringir == 1)) || ((atual->nextP->popu >= pop) && (restringir == 2))){
+            remover = atual->nextP;
+            atual->nextP = atual->nextP->nextP;
+            free(remover);
+        }
+        else{atual = atual->nextP;}
+    }
+    return paux->nextP;
+}
+
+Detalhes* restringir_week(Pais* head_pais, char* ano1, char* ano2, int restringir){
+    Detalhes aux;
+    Detalhes* atual,*paux = &aux, *remover = NULL;
+    paux->nextD = head_pais->nextD;
+    atual = paux;
+    char ivrt[8];                   //variavel para inverter caso ano1 > ano2
+    if((strcmp(ano1,ano2) > 0) && (restringir == 4)){      // inversão caso ano1 > ano2
+        strcpy(ivrt,ano1);
+        strcpy(ano1, ano2);
+        strcpy(ano2, ivrt);
+    }
+    while(atual->nextD !=  NULL){
+        if((((strcmp(atual->nextD->year_week, ano1)) != 0) && (restringir == 3)) || (((strcmp(atual->nextD->year_week, ano1) < 0) || (strcmp(atual->nextD->year_week, ano2) > 0))  && (restringir == 4))){
+            remover = atual->nextD;
+            atual->nextD = atual->nextD->nextD;
+            free(remover);
+        }
+        else{atual = atual->nextD;}
+}
+return paux->nextD;
+}
+
+
 Detalhes* selecionar (Pais* head_pais, int select){
-    Detalhes* aux = NULL;
-    Detalhes* atual;
-    Detalhes* remover = NULL;
+    Detalhes* aux = NULL, *atual, *remover = NULL;
     int num_week = -1; //como o numero de infetados/mortos não pode ser negativo então ele guarda sempre o primeiro valor dos detalhes no aux
     double num_racio = -1;
     for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD){
@@ -259,7 +303,7 @@ Pais* ordenar(Pais* head, int ordena, char* semana){
  */
 int main(int argc, char *argv[])
 {
-    int opt, numero = 0;
+    int opt, numero = 0, sel = 0;
     char restricao[6], leitura[8] = "all", selecao[9], ordenacao[5] = "alfa", l_fich[maxficheiro], e_fich[maxficheiro], l_ext[4], e_ext[4], ler[max_linha], *pend, *pend2;
     char ano1[8], ano2[8], ano_ord[8];
     opterr = 0;
@@ -292,15 +336,13 @@ int main(int argc, char *argv[])
             break;
         case 'D':
             sscanf(optarg," %s", selecao);
+            sel = 1;
             break;
         case 'S':
             sscanf(optarg," %s", ordenacao);
             if (strcmp("inf", ordenacao) == 0 || strcmp("dea", ordenacao) == 0)
             {
                 sscanf(optarg + strlen(ordenacao) + 1," %s", ano_ord);
-            }
-            else {
-                help(1);
             }
             break;
 
@@ -347,16 +389,16 @@ int main(int argc, char *argv[])
     //Tipo de escrita
     if(strcmp(e_ext,"csv") == 0)
     {
-        if ((ep = fopen(e_fich, "w"))==NULL)
+        if ((ep = fopen(e_fich, "w")) == NULL)
         {
-            help(2);
+            help(6);
         }
     }
     else if((strcmp(e_ext,"dat")) == 0)
     {
         if ((ep = fopen(e_fich, "wb"))==NULL)
         {
-            help(2);
+            help(6);
         }
     }
     else
@@ -366,7 +408,7 @@ int main(int argc, char *argv[])
     Pais* head = NULL;
     //Leitura do ficheiro
     if(strcmp(l_ext,"csv") == 0){
-    if (fgets(ler, max_linha, lp)==NULL)
+    if (fgets(ler, max_linha, lp) == NULL)
     {
         help(4);
     }}
@@ -420,7 +462,11 @@ else{
         }
         head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
     }}
+
+
     Pais* atual;
+    ///Selecao
+    if(sel){
     if(strcmp(selecao, "inf") == 0){
     for (atual = head ; atual != NULL; atual = atual->nextP){
       atual->nextD = selecionar(atual, 1);
@@ -441,7 +487,32 @@ else{
       atual->nextD = selecionar(atual, 4);
       atual->nextD->nextD = NULL;
     }}
+    else{
+        help(1);
+    }}
 
+
+    ///restricao
+    if(strcmp(restricao, "min") == 0){
+        if(numero <= 0){
+            help(5);}
+        head = restringir_pop(head, numero,1);}
+
+    else if(strcmp(restricao, "max") == 0){
+        if(numero <= 0){
+            help(5);}
+        head = restringir_pop(head, numero,2);}
+
+    else if(strcmp(restricao, "date") == 0){
+    for (atual = head ; atual != NULL; atual = atual->nextP){
+        atual->nextD = restringir_week(atual, ano1, ano2, 3);}}
+    else if(strcmp(restricao, "dates") == 0){
+        for (atual = head ; atual != NULL; atual = atual->nextP){
+        atual->nextD = restringir_week(atual, ano1, ano2, 4);}}
+
+
+
+    ///ordenacao
     if(head != NULL && head->nextP != NULL){
         if(strcmp(ordenacao,"alfa") == 0){
         head = ordenar(head, 1," ");
@@ -459,10 +530,9 @@ else{
         apagar(head);
         help(1);
         }}
-    Detalhes* atual2;
 
+    Detalhes* atual2;
     for (atual = head ; atual != NULL; atual = atual->nextP){
-    for (atual2 = atual->nextD; atual2 != NULL; atual2 = atual2->nextD){
 
         if(strcmp(e_ext,"dat") == 0){
         fwrite(atual->pais, sizeof(atual->pais), 1, ep);
@@ -491,6 +561,3 @@ else{
     return 0;
 
 }
-     /// -i covid19_w_t01.csv -o escrita.csv -L all
-     /// -i covid19_w_t01.csv -o escrita.dat -L all
-     ///  -i escrita.dat -o escrita.csv -L all -P min 5000*/ /// Ainda nao funciona
