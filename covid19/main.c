@@ -46,18 +46,28 @@ void help(int helpvar)
         printf("Nao consegui abrir o ficheiro de escrita (possivelmente esta aberto)");
         break;
     }
-    /*
-    printf("\n### Menu Ajuda ###\n");
+
+    printf("\n\n### Menu Ajuda ###\n");
     printf("Metodo de introducao de argumentos\n");
     printf("./covid19 [argumento1] [argumento2] ... [argumentoN] -> Inicializa o programa com as carateristicas definidas nos argumentos\n");
     printf("Argumentos de Leitura:\n ");
-    printf("    -L all          Mostra todos os dados do ficheiro introduzido\n    -L nome_do_continente        Mostra todos os dados referentes a um continente ");
+    printf("\t-L all\t\t\t\tMostra todos os dados do ficheiro introduzido\n");
+    printf("\t-L nome_do_continente\t\tMostra todos os dados referentes a um continente\n");
     printf("Argumentos de Ordenacao de Dados:\n ");
-    printf("    -S alfa         Ordena os paises por ordem alfabetica\n     -S  pop         Ordena de forma decrescente a populacao dos paises\n    -S inf yyyy-ww          Ordena de forma decrescente o numero total de infetados por pais na data especificada\n     -S dea yyyy-ww          Ordena de forma decrescente o numero total de mortes por pais na data especificada\n");
+    printf("\t-S alfa\t\t\t\tOrdena os paises por ordem alfabetica\n");
+    printf("\t-S  pop\t\t\t\tOrdena de forma decrescente a populacao dos paises\n");
+    printf("\t-S inf yyyy-ww\t\t\tOrdena de forma decrescente o numero total de infetados por pais na data especificada\n");
+    printf("\t-S dea yyyy-ww\t\t\tOrdena de forma decrescente o numero total de mortes por pais na data especificada\n");
     printf("Argumentos de Selecao de Dados:\n ");
-    printf("    -D inf          Seleciona a semana com mais infetados de cada pais\n    -D dea          Seleciona a semana com mais mortes de cada pais\n   -D racioinf         Seleciona a semana com o maior racio de infetados por 100000 habitantes\n   -D raciodea         Seleciona a semana com o maior racio de mortes por 100000 habitantes");
+    printf("\t-D inf\t\t\t\tSeleciona a semana com mais infetados de cada pais\n");
+    printf("\t-D dea\t\t\t\tSeleciona a semana com mais mortes de cada pais\n");
+    printf("\t-D racioinf\t\t\tSeleciona a semana com o maior racio de infetados por 100000 habitantes\n");
+    printf("\t-D raciodea\t\t\tSeleciona a semana com o maior racio de mortes por milhão de habitantes\n");
     printf("Argumentos de Rstricao de Dados:\n ");
-    printf("    -P\n ");*/
+    printf("\t-P min N\t\t\tMostra apenas os paises com papulacao superior a N\n");
+    printf("\t-P max N\t\t\tMostra apenas os paises com papulacao inferior a N\n");
+    printf("\t-P date yyy-ww\t\t\tMostra apenas os dados da semana introduzida\n");
+    printf("\t-P dates yyyy-ww yyyy-ww\tMostra os dados referente ao intervalo de semanas introduzido\n");
     exit(-1);
 }
 
