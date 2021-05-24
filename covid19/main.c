@@ -86,7 +86,15 @@ Pais* restringir_pop(Pais* head, int pop, int restringir)
         {
             remover = atual->nextP;
             atual->nextP = atual->nextP->nextP;
+            Detalhes* remover2;
+            while(remover->nextD != NULL)
+            {
+                remover2 = remover->nextD;
+                remover->nextD = remover->nextD->nextD;
+                free(remover2);
+            }
             free(remover);
+
         }
         else
         {
