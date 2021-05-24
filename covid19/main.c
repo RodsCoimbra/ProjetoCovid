@@ -82,7 +82,7 @@ Pais* restringir_pop(Pais* head, int pop, int restringir)
     atual = paux;
     while(atual->nextP !=  NULL)
     {
-        if(((atual->nextP->popu*1000 <= pop) && (restringir == 1)) || ((atual->nextP->popu*1000 >= pop) && (restringir == 2)))
+        if(((atual->nextP->popu <= pop*1000 ) && (restringir == 1)) || ((atual->nextP->popu >= pop*1000) && (restringir == 2)))
         {
             remover = atual->nextP;
             atual->nextP = atual->nextP->nextP;
