@@ -10,8 +10,8 @@ typedef struct Detalhes   // lista que está dentro da lista "pais"
     char indic[7];
     int week_count;
     char year_week[8];
-    double lastfteen;
-    int n_dorc; // numero de deaths or cases
+    double lastfteen; // racio
+    int n_dorc;     // numero de deaths or cases
     struct Detalhes *nextD; // nextD é o pointer do detalhe seguinte
 } Detalhes;
 
@@ -76,18 +76,18 @@ void help(int helpvar)
 
 Pais* restringir_pop(Pais* head, int pop, int restringir)
 {
-    Pais aux;
+    Pais aux; // variavel para auxilio da funcao
     Pais* paux= &aux,*atual, *remover = NULL;
-    paux->nextP = head;
+    paux->nextP = head; // coloca o endereço do primeiro Pais (head) 
     atual = paux;
-    while(atual->nextP !=  NULL)
+    while(atual->nextP !=  NULL)    // executa até ao final da lista (ultimo_elemento_da_lista->nextP = NULL)
     {
-        if(((atual->nextP->popu <= pop*1000 ) && (restringir == 1)) || ((atual->nextP->popu >= pop*1000) && (restringir == 2)))
+        if(((atual->nextP->popu <= pop*1000 ) && (restringir == 1)) || ((atual->nextP->popu >= pop*1000) && (restringir == 2))) // este IF aplica-se tanto para verificar quando a população do pais é inferior que o valor escolhido ou superior
         {
             remover = atual->nextP;
             atual->nextP = atual->nextP->nextP;
             Detalhes* remover2;
-            while(remover->nextD != NULL)
+            while(remover->nextD != NULL) // Executa enquanto não chegar ao ultimo elememento da lista de detalhes, e dá free dos nodes_detalhes que não cumprem a condição
             {
                 remover2 = remover->nextD;
                 remover->nextD = remover->nextD->nextD;
@@ -110,14 +110,14 @@ Detalhes* restringir_week(Pais* head_pais, char* ano1, char* ano2, int restringi
     Detalhes* atual,*paux = &aux, *remover = NULL;
     paux->nextD = head_pais->nextD;
     atual = paux;
-    char ivrt[8];                   //variavel para inverter caso ano1 > ano2
-    if((strcmp(ano1,ano2) > 0) && (restringir == 4))       // inversão caso ano1 > ano2
+    char ivrt[8];       //variavel para inverter caso ano1 > ano2
+    if((strcmp(ano1,ano2) > 0) && (restringir == 4))        // inversão caso ano1 > ano2
     {
         strcpy(ivrt,ano1);
         strcpy(ano1, ano2);
         strcpy(ano2, ivrt);
     }
-    while(atual->nextD !=  NULL)
+    while(atual->nextD !=  NULL)        // Executa enquanto não chegar ao ultimo elememento da lista de detalhes, e dá free dos nodes_detalhes que não cumprem a condição
     {
         if((((strcmp(atual->nextD->year_week, ano1)) != 0) && (restringir == 3)) || (((strcmp(atual->nextD->year_week, ano1) < 0) || (strcmp(atual->nextD->year_week, ano2) > 0))  && (restringir == 4)))
         {
@@ -139,10 +139,10 @@ Detalhes* selecionar (Pais* head_pais, int select)
     Detalhes* aux = NULL, *atual, *remover = NULL;
     int num_week = -1; //como o numero de infetados/mortos não pode ser negativo então ele guarda sempre o primeiro valor dos detalhes no aux
     double num_racio = -1;
-    for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)
+    for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)     // Executa até percorrer a lista toda
     {
         if(((strcmp(atual->indic,"cases")== 0) && (atual->week_count > num_week) && (select== 1)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->week_count > num_week) && (select == 2)) || ((strcmp(atual->indic,"cases") == 0) && (atual->lastfteen > num_racio) && (select== 3)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->lastfteen > num_racio) && (select == 4)))
-        {
+        { // ???????????????''        
             free(aux);
             aux = atual;
             num_week = atual->week_count;
@@ -163,13 +163,13 @@ Detalhes* selecionar (Pais* head_pais, int select)
 Pais* verificacao(char* cod_pais,Pais* head)
 {
     Pais* aux;
-    if (head == NULL)
+    if (head == NULL) // Se a lista não tiver nenhum node
     {
         return NULL;
     }
-    for(aux = head; aux != NULL; aux = aux->nextP)
+    for(aux = head; aux != NULL; aux = aux->nextP) // Executa até percorrer a lista toda 
     {
-        if(strcmp(cod_pais,aux->cod_pais) == 0)    //comparacao com o codigo dos paises
+        if(strcmp(cod_pais,aux->cod_pais) == 0)    //comparacao com o codigo dos paises, se o paisja tiver o node_pais criado dá return
         {
             return aux;
         }
@@ -181,13 +181,13 @@ void criarD(Detalhes* deta,char* indic, int week_count, char* year_week, double 
 {
     Detalhes* aux = deta;
     Detalhes* deta2 = (Detalhes*) calloc(1,sizeof(Detalhes));
-    while(aux->nextD != NULL)
+    while(aux->nextD != NULL) // Anda com o aux até ao final da lista para depois colocar o novo_detalhes
     {
         aux = aux->nextD;
     }
     aux->nextD = deta2;
 
-    deta2->n_dorc = n_dorc;
+    deta2->n_dorc = n_dorc;         // O node_detalhes recebe os dados do ficheiro lido
     deta2->lastfteen = lastfteen;
     deta2->week_count = week_count;
     strcpy(deta2->year_week, year_week);
@@ -198,7 +198,7 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
 {
     Pais* P_atual;
     P_atual = verificacao(cod_pais, head);
-    if (P_atual != NULL)
+    if (P_atual != NULL)        // se ???o que é o P_atual???,cria um node_detalhes 
     {
         criarD(P_atual->nextD, indic, week_count, year_week, lastfteen, n_dorc);
         return head;
@@ -215,11 +215,11 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
     {
         help(3);
     }
-    novo->popu = popu;
+    novo->popu = popu;      // coloca os dados lidos nos respetivos campos do node_pais
     strcpy(novo->cont, cont);
     strcpy(novo->pais, pais);
     strcpy(novo->cod_pais, cod_pais);
-    if (head == NULL)
+    if (head == NULL)   // se não houver nenhum elemento na lista, passa oara o node os detalhes variaveis para os campos respetivos
     {
         novo->nextP = NULL;
         novo->nextD = deta;
@@ -231,7 +231,7 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
         return novo;
     }
     Pais* aux = head;
-    while(aux->nextP != NULL)
+    while(aux->nextP != NULL)       // Avança até ao final da lista de paises
     {
         aux = aux->nextP;
     }
@@ -250,11 +250,11 @@ char* separar(char sep, char* str, char troca)
 {
     int i;
     char* psep = NULL;
-    for(i=0; str[i] != EOF ; i++)
+    for(i=0; str[i] != EOF ; i++) // Executa enquanto não chegar ao final da string
     {
-        if(str[i] == sep)
+        if(str[i] == sep)   // Quando encontrar o carater passado na variavel "sep" muda esse carater para o que for passado pela variavel "troca"
         {
-            str[i] = troca;
+            str[i] = troca; 
             psep = &str[i+1];
             break;
         }
@@ -262,16 +262,14 @@ char* separar(char sep, char* str, char troca)
     return psep;
 }
 
-
 void apagar(Pais* head)
 {
-
     Pais* aux;
     Detalhes* aux2;
 
-    while(head != NULL)
+    while(head != NULL) // Executa até encontrar o final da lista
     {
-        while(head->nextD != NULL)
+        while(head->nextD != NULL) // Até chegar ao final da lista remove todos os nodes
         {
             aux2 = head->nextD;
             head->nextD = head->nextD->nextD;
@@ -283,29 +281,23 @@ void apagar(Pais* head)
     }
 }
 
-
-
-
-
 int valores(Pais* head_pais, int ordena, char*semana)
 {
     Detalhes* atual;
-    if(ordena == 3)
+    if(ordena == 3)     // Executa se a ordenação for por número de infetados
     {
-        for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)
+        for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)     // Executa até chegar ao final da lista de detalhes 
         {
-            if((strcmp(atual->indic,"cases")==0) && (strcmp(atual->year_week, semana) ==0))
+            if((strcmp(atual->indic,"cases")==0) && (strcmp(atual->year_week, semana) == 0))        // Retorna "atual->week_count"" se a semana e o indic(infetados) coresponderem
             {
                 return atual->week_count;
             }
         }
     }
-
-    else if(ordena == 4)
-    {
+    else if(ordena == 4)        // Executa se a ordenação for por número de mortos
         for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)
         {
-            if((strcmp(atual->indic,"deaths")==0) && (strcmp(atual->year_week, semana) ==0))
+            if((strcmp(atual->indic,"deaths")==0) && (strcmp(atual->year_week, semana) ==0))        // Retorna "atual->week_count"" se a semana e o indic(mortos) coresponderem
             {
                 return atual->week_count;
             }
@@ -317,12 +309,11 @@ int valores(Pais* head_pais, int ordena, char*semana)
 //1 - alfa; 2-pop; 3-inf; 4-dea;
 Pais* ordenar(Pais* head, int ordena, char* semana)
 {
-
     int flag = 0, x = 0, y = 0;
     Pais* esq, *drt, *paux, aux, *d, *e;
     paux = &aux;            //Cria auxiliar antes, pois vai mexer nos dois blocos da frente
-    paux->nextP = head;
-    while(flag == 0)
+    paux->nextP = head;     // Cria um outro pointer que contém o endereço do primeiro node_pais
+    while(flag == 0)        // Bubble sort, com flag
     {
         esq = paux;
         drt = paux -> nextP;
@@ -336,7 +327,7 @@ Pais* ordenar(Pais* head, int ordena, char* semana)
                 y = valores(drt->nextP, ordena, semana);
             }
             if ((strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 1 )|| ((drt->popu) < (drt->nextP->popu) && ordena == 2) || (x < y) ||(x==y && strcmp(drt->pais, drt->nextP->pais) > 0 && (ordena == 3 || ordena == 4)))
-            {
+            {       // faz a comparação dos valores e faz a troca de posições
                 flag = 0;
                 d = esq->nextP;
                 e = drt->nextP->nextP;
@@ -345,7 +336,7 @@ Pais* ordenar(Pais* head, int ordena, char* semana)
                 drt->nextP = e;
             }
             esq = drt;
-            if (drt->nextP != NULL)
+            if (drt->nextP != NULL) // Se a lista não tiver no final avança para o próximo node_pais
             {
                 drt = drt->nextP;
             }
@@ -466,6 +457,7 @@ int main(int argc, char *argv[])
         help(6);
     }
     Pais* head = NULL;
+
     //Leitura do ficheiro
     if(strcmp(l_ext,"csv") == 0)
     {
@@ -478,6 +470,7 @@ int main(int argc, char *argv[])
     {
         fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n"); //titulo
     }
+
     // Ler linhas
     Pais aux;
     Detalhes aux2;
@@ -530,8 +523,6 @@ int main(int argc, char *argv[])
             head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
         }
     }
-
-
     Pais* atual;
 
     ///Selecao
@@ -575,7 +566,6 @@ int main(int argc, char *argv[])
         }
     }
 
-
     ///restricao
     if(strcmp(restricao, "min") == 0)
     {
@@ -609,8 +599,6 @@ int main(int argc, char *argv[])
             atual->nextD = restringir_week(atual, ano1, ano2, 4);
         }
     }
-
-
 
     ///ordenacao
     if(head != NULL && head->nextP != NULL)
@@ -672,5 +660,4 @@ int main(int argc, char *argv[])
     fclose(ep);
     printf("\nO seu ficheiro foi concluido! O conteudo foi escrito no ficheiro %s \n\n",e_fich);
     return 0;
-
 }
