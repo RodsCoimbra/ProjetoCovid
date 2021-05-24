@@ -295,6 +295,7 @@ int valores(Pais* head_pais, int ordena, char*semana)
         }
     }
     else if(ordena == 4)        // Executa se a ordenação for por número de mortos
+    {
         for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)
         {
             if((strcmp(atual->indic,"deaths")==0) && (strcmp(atual->year_week, semana) ==0))        // Retorna "atual->week_count"" se a semana e o indic(mortos) coresponderem
@@ -336,7 +337,7 @@ Pais* ordenar(Pais* head, int ordena, char* semana)
                 drt->nextP = e;
             }
             esq = drt;
-            if (drt->nextP != NULL) // Se a lista não tiver no final avança para o próximo node_pais
+            if (drt->nextP != NULL) // Se a lista não tiver no final avança para o próximo
             {
                 drt = drt->nextP;
             }
