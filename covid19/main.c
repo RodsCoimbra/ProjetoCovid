@@ -57,7 +57,7 @@ void help(int helpvar)
     printf("\t-L nome_do_continente\t\tMostra todos os dados referentes a um continente\n");
     printf("Argumentos de Ordenacao de Dados:\n ");
     printf("\t-S alfa\t\t\t\tOrdena os paises por ordem alfabetica\n");
-    printf("\t-S  pop\t\t\t\tOrdena de forma decrescente a populacao dos paises\n");
+    printf("\t-S pop\t\t\t\tOrdena de forma decrescente a populacao dos paises\n");
     printf("\t-S inf yyyy-ww\t\t\tOrdena de forma decrescente o numero total de infetados por pais na data especificada\n");
     printf("\t-S dea yyyy-ww\t\t\tOrdena de forma decrescente o numero total de mortes por pais na data especificada\n");
     printf("Argumentos de Selecao de Dados:\n ");
