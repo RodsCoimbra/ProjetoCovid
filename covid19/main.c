@@ -30,7 +30,7 @@ void help(int helpvar)
     switch (helpvar)
     {
     case 1:
-        perror("Erro! Problema nos argumentos de entrada");
+        perror("Argumentos de entrada desconhecido.");
         break;
     case 2:
         perror("Nao foi possivel ler o ficheiro de entrada.");
@@ -42,10 +42,19 @@ void help(int helpvar)
         perror("O ficheiro de entrada não tem dados.");
         break;
     case 5:
-        perror("Numero da populacao para a restricao invalido ou nao inserido.");
+        perror("Nao consegui abrir o ficheiro de escrita (possivelmente esta aberto ou não foi passado argumento)");
         break;
     case 6:
-        perror("Nao consegui abrir o ficheiro de escrita (possivelmente esta aberto ou não escreveu)");
+        perror("O argumento -P está errado.");
+        break;
+    case 7:
+        perror("O argumento -L está errado.");
+        break;
+    case 8:
+        perror("O argumento -D está errado.");
+        break;
+    case 9:
+        perror("O argumento -S está errado.");
         break;
     }
 
@@ -57,7 +66,7 @@ void help(int helpvar)
     printf("\t-L nome_do_continente\t\tMostra todos os dados referentes a um continente\n");
     printf("Argumentos de Ordenacao de Dados:\n ");
     printf("\t-S alfa\t\t\t\tOrdena os paises por ordem alfabetica\n");
-    printf("\t-S pop\t\t\t\tOrdena de forma decrescente a populacao dos paises\n");
+    printf("\t-S  pop\t\t\t\tOrdena de forma decrescente a populacao dos paises\n");
     printf("\t-S inf yyyy-ww\t\t\tOrdena de forma decrescente o numero total de infetados por pais na data especificada\n");
     printf("\t-S dea yyyy-ww\t\t\tOrdena de forma decrescente o numero total de mortes por pais na data especificada\n");
     printf("Argumentos de Selecao de Dados:\n ");
@@ -380,12 +389,16 @@ int main(int argc, char *argv[])
             }
             else
             {
-                help(1);
+                help(6);
             }
             break;
         case 'L':
             sscanf(optarg," %s", leitura);
-            break;
+            if(strcmp(leitura, "all") == 0 || strcmp(leitura, "Africa") == 0 || strcmp(leitura, "America") == 0 || strcmp(leitura, "Asia") == 0 || strcmp(leitura, "Europe") == 0 || strcmp(leitura, "Oceania") == 0){
+            break;}
+            else{
+                help(7);
+            }
         case 'D':
             sscanf(optarg," %s", selecao);
             sel = 1;
@@ -416,6 +429,7 @@ int main(int argc, char *argv[])
         }
         }
     }
+
     FILE *lp;
     FILE *ep;
     //Tipo de leitura
