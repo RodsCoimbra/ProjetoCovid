@@ -1,6 +1,6 @@
 #include "Projeto_covid.h"
 
-Pais* restringir_pop(Pais* head, int pop, int restringir)
+Pais* restringir_pop(Pais* head, long long int pop, int restringir)
 {
     Pais aux;   // variavel para auxilio da funcao
     Pais* paux= &aux,*atual, *remover = NULL;

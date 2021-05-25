@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
+#include <ctype.h>
 #define maxficheiro 259 //numero max de carateres de ficheiros no windows
 #define max_linha 120
+
 
 
 typedef struct Detalhes   // lista que está dentro da lista "pais"
@@ -47,7 +49,7 @@ void help(int);
  * \return Pais*
  *
  */
-Pais* restringir_pop(Pais*, int, int);
+Pais* restringir_pop(Pais*,long long int, int);
 
 /** \brief
  *
@@ -77,7 +79,7 @@ Detalhes* selecionar (Pais*, int);
  * \return Pais*
  *
  */
-Pais* verificacao(char*,Pais*);
+Pais* encontra_pais(char*,Pais*);
 
 
 /** \brief
@@ -146,6 +148,8 @@ int valores(Pais*, int, char*);
  */
 Pais* ordenar(Pais*, int, char*);
 
+int verificacao_week(char*);
 
+int verificacao_palavra(char* str);
 
 #endif // projeto_covid

@@ -1,6 +1,6 @@
 #include "Projeto_covid.h"
 
-Pais* verificacao(char* cod_pais,Pais* head)
+Pais* encontra_pais(char* cod_pais,Pais* head)
 {
     Pais* aux;
     if (head == NULL) // Se a lista não tiver nenhum node
@@ -36,7 +36,7 @@ void criarD(Detalhes* deta,char* indic, int week_count, char* year_week, double 
 Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char* indic, int week_count, char* year_week, double lastfteen, int n_dorc)
 {
     Pais* P_atual;
-    P_atual = verificacao(cod_pais, head);
+    P_atual = encontra_pais(cod_pais, head);
     if (P_atual != NULL)    // Caso em que o node daquele pais já existe e portanto só adiciona um node aos detalhes desse pais
     {
         criarD(P_atual->nextD, indic, week_count, year_week, lastfteen, n_dorc);

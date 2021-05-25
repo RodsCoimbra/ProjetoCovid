@@ -17,7 +17,7 @@ void help(int helpvar)
         perror("O ficheiro de entrada não tem dados.");
         break;
     case 5:
-        perror("Nao consegui abrir o ficheiro de escrita (possivelmente esta aberto ou não foi passado argumento)");
+        perror("Nao consegui abrir o ficheiro de escrita (possivelmente esta aberto ou não foi passado o argumento)");
         break;
     case 6:
         perror("O argumento -P está errado.");
@@ -30,6 +30,9 @@ void help(int helpvar)
         break;
     case 9:
         perror("O argumento -S está errado.");
+        break;
+    case 10:
+        perror("O ficheiro contêm um erro na linha escrita em cima.");
         break;
     }
 
@@ -71,5 +74,32 @@ char* separar(char sep, char* str, char troca)
         }
     }
     return psep;
+}
+
+
+int verificacao_week(char* str){
+int a;
+for(a=0; a != 7; a++){
+    if(isdigit(str[a]) == 0 && a != 4)
+       {
+         return (1);
+       }
+    else if(a == 4 && str[4] != '-'){
+        return(1);
+    }
+}
+return (0);
+}
+
+
+int verificacao_palavra(char* str){
+int a;
+for(a=0; a < strlen(str); a++){
+    if(isdigit(str[a]) != 0)
+       {
+         return (1);
+       }
+}
+return (0);
 }
 
