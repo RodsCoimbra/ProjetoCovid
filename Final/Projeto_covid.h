@@ -13,7 +13,7 @@ typedef struct Detalhes   // lista que está dentro da lista "pais"
     char indic[7];
     int week_count;
     char year_week[8];
-    double lastfteen;
+    double lastfteen; // racio
     int n_dorc; // numero de deaths or cases
     struct Detalhes *nextD; // nextD é o pointer do detalhe seguinte
 } Detalhes;

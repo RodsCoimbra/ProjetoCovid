@@ -57,18 +57,13 @@ void help(int helpvar)
     exit(-1);
 }
 
-
-
-
-
-
 char* separar(char sep, char* str, char troca)
 {
     int i;
     char* psep = NULL;
-    for(i=0; str[i] != EOF ; i++)
+    for(i=0; str[i] != EOF ; i++)   // Executa enquanto não chegar ao final do ficheiro
     {
-        if(str[i] == sep)
+        if(str[i] == sep)       // Quando encontrar o carater passado na variavel "sep" muda esse carater para o que for passado pela variavel "troca" e retorna o endereço do carater a seguir ao trocado
         {
             str[i] = troca;
             psep = &str[i+1];

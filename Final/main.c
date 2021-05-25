@@ -52,12 +52,18 @@ int main(int argc, char *argv[])
         case 'i':
             sscanf(optarg," %s", l_fich);
             pend = separar('.', l_fich,'.');
+            if(pend == pend2){              //Caso o utilizador não meta extensão do ficheiro
+                help(2);
+            }
             sscanf(pend,"%s", l_ext);
             break;
 
         case 'o':
             sscanf(optarg," %s", e_fich);
-            pend = separar('.', e_fich,'.');
+            pend2 = separar('.', e_fich,'.');
+            if(pend == pend2){              //Caso o utilizador não meta extensão do ficheiro
+                help(5);
+            }
             sscanf(pend,"%s", e_ext);
             break;
 
