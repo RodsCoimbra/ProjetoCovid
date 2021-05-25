@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-    int opt, sel = 0, linha = 1, erro = 0;
+    int opt, sel = 0, linha = 1, erro = 0, i;
     long long int numero = 0;
     char restricao[6] = {""}, leitura[8] = "all", selecao[9] = {""}, ordenacao[5] = "alfa", l_fich[maxficheiro] = {""}, e_fich[maxficheiro] = {""}, l_ext[4]= {""}, e_ext[4] = {""};
     char ano1[8] = {""}, ano2[8] = {""}, ano_ord[8] = {""}, ler[max_linha] = {""}, *pend = NULL, *pend2 = NULL;
@@ -54,22 +54,50 @@ int main(int argc, char *argv[])
             }
         case 'D':
             sscanf(optarg," %s", selecao);
-            sel = 1;
-            break;
+            if(strcmp(selecao, "inf") == 0 || strcmp(selecao, "dea") == 0 || strcmp(selecao, "racioinf") == 0 || strcmp(selecao, "raciodea") == 0)
+            {
+                sel = 1;
+                break;
+            }
+            else
+            {
+                help(8);
+            }
+
         case 'S':
             sscanf(optarg," %s", ordenacao);
-            if (strcmp("inf", ordenacao) == 0 || strcmp("dea", ordenacao) == 0)
+            if(strcmp(ordenacao,"alfa") == 0 || strcmp(ordenacao,"pop") == 0)
+            {
+                break;
+            }
+            else if (strcmp("inf", ordenacao) == 0 || strcmp("dea", ordenacao) == 0)
             {
                 sscanf(optarg + strlen(ordenacao) + 1," %s", ano_ord);
                 if(verificacao_week(ano_ord))
                 {
                     help(9);
                 }
+                break;
             }
-            break;
+            else
+            {
+                help(9);
+            }
 
         case 'i':
             sscanf(optarg," %s", l_fich);
+            for(i=0; i < strlen(l_fich); i++)
+            {
+                if(l_fich[i] == '.')
+                {
+                    i = -1; //Flag com um número impossivel de o i ter dentro do for
+                    break;
+                }
+            }
+            if(i != -1)
+            {
+                help(2);
+            }
             pend = separar('.', l_fich,'.');
             if(pend == pend2)               //Caso o utilizador não meta extensão do ficheiro
             {
@@ -80,6 +108,18 @@ int main(int argc, char *argv[])
 
         case 'o':
             sscanf(optarg," %s", e_fich);
+            for(i=0; i < strlen(e_fich); i++)
+            {
+                if(e_fich[i] == '.')
+                {
+                    i = -1; //Flag com um número impossivel de o i ter dentro do for
+                    break;
+                }
+            }
+            if(i != -1)
+            {
+                help(5);
+            }
             pend2 = separar('.', e_fich,'.');
             if(pend == pend2)               //Caso o utilizador não meta extensão do ficheiro
             {
@@ -133,6 +173,7 @@ int main(int argc, char *argv[])
     }
     else
     {
+        fclose(lp);
         help(5);
     }
     Pais* head = NULL;
@@ -274,13 +315,6 @@ int main(int argc, char *argv[])
                 atual->nextD->nextD = NULL;
             }
         }
-        else
-        {
-            apagar(head);
-            fclose(lp);
-            fclose(ep);
-            help(8);
-        }
     }
 
 
@@ -329,13 +363,6 @@ int main(int argc, char *argv[])
         else if(strcmp(ordenacao,"dea") == 0)
         {
             head = ordenar(head, 4, ano_ord);
-        }
-        else
-        {
-            apagar(head);
-            fclose(lp);
-            fclose(ep);
-            help(9);
         }
     }
     ///Escrita de dados

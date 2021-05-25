@@ -148,8 +148,20 @@ int valores(Pais*, int, char*);
  */
 Pais* ordenar(Pais*, int, char*);
 
+/** \brief
+ *
+ * \param char*
+ * \return int
+ *
+ */
 int verificacao_week(char*);
 
+/** \brief
+ *
+ * \param str char*
+ * \return int
+ *
+ */
 int verificacao_palavra(char* str);
 
 #endif // projeto_covid
