@@ -138,6 +138,7 @@ int main(int argc, char *argv[])
     {
         if ((ep = fopen(e_fich, "w")) == NULL)
         {
+            fclose(lp);
             help(5);
         }
     }
@@ -145,6 +146,7 @@ int main(int argc, char *argv[])
     {
         if ((ep = fopen(e_fich, "wb"))==NULL)
         {
+            fclose(lp);
             help(5);
         }
     }

@@ -25,7 +25,7 @@ int valores(Pais* head_pais, int ordena, char*semana)
             }
         }
     }
-    return 0;
+    return -1;
 }
 
 Pais* ordenar(Pais* head, int ordena, char* semana)
@@ -49,7 +49,7 @@ Pais* ordenar(Pais* head, int ordena, char* semana)
                 x = valores(drt, ordena, semana);
                 y = valores(drt->nextP, ordena, semana);
             }
-            if ((strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 1 )|| ((drt->popu) < (drt->nextP->popu) && ordena == 2) || (x < y) ||(x==y && strcmp(drt->pais, drt->nextP->pais) > 0 && (ordena == 3 || ordena == 4)))
+            if ((strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 1 )|| ((drt->popu) < (drt->nextP->popu) && ordena == 2) || ((drt->popu) == (drt->nextP->popu) && strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 2) || (x < y) ||((x==y && strcmp(drt->pais, drt->nextP->pais) > 0 && (ordena == 3 || ordena == 4) && x != -1)))
             {
                 // faz a comparação dos valores e faz a troca de posições, variaveis "d" e "e" de auxilio
                 flag = 0;
@@ -73,9 +73,10 @@ Pais* ordenar(Pais* head, int ordena, char* semana)
 
 Pais* Escolher_orde(Pais* head, char* ordenacao, char* ano_ord)
 {
-    head = ordenar(head, 1, NULL);              //organiza sempre por ordem alfabetica para depois caso haja empate já vir organizado por ordem alfabetica
     if(strcmp(ordenacao,"alfa") == 0)           //apenas para se for esta opção passar os outros
-    {}
+    {
+        head = ordenar(head, 1, NULL);
+    }
     else if(strcmp(ordenacao,"pop") == 0)
     {
         head = ordenar(head, 2,NULL);
