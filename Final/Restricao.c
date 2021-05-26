@@ -62,7 +62,7 @@ Detalhes* restringir_week(Pais* head_pais, char* ano1, char* ano2, int restringi
 Pais* Escolher_restri(Pais* head,char* restricao, long long int numero, char* ano1, char* ano2)
 {
     Pais* atual;
-    if(strcmp(restricao, "min") == 0)
+    if(strcmp(restricao, "min") == 0)                           //Compara as restrições que existem com o argumento do -P do utilizador
     {
         head = restringir_pop(head, numero,1);
     }
@@ -74,9 +74,9 @@ Pais* Escolher_restri(Pais* head,char* restricao, long long int numero, char* an
 
     else if(strcmp(restricao, "date") == 0)
     {
-        for (atual = head ; atual != NULL; atual = atual->nextP)
+        for (atual = head ; atual != NULL; atual = atual->nextP)        //Para passar todos os elementos da lista de paises
         {
-            atual->nextD = restringir_week(atual, ano1, ano2, 3);
+            atual->nextD = restringir_week(atual, ano1, ano2, 3);       //Coloca no nextD do pais atual o endereço do primeiro elemento da lista de detalhes já organizada
         }
     }
     else if(strcmp(restricao, "dates") == 0)

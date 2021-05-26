@@ -6,7 +6,7 @@ int valores(Pais* head_pais, int ordena, char*semana)
     Detalhes* atual;
     if(ordena == 3) // Executa se a ordenação for por número de infetados
     {
-        for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)  // Executa até chegar ao final da lista de detalhes
+        for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)  // Executa até chegar ao final da lista de detalhes daquele pais
         {
             if((strcmp(atual->indic,"cases")==0) && (strcmp(atual->year_week, semana) ==0)) // Retorna o valor de "atual->week_count"" se a semana e o indic(infetados) coresponderem
             {
@@ -25,7 +25,7 @@ int valores(Pais* head_pais, int ordena, char*semana)
             }
         }
     }
-    return -1;
+    return -1;  // Retorna o valor de -1 (pois week_count nunca pode ser negativo) para servir de flag na função ordenar
 }
 
 Pais* ordenar(Pais* head, int ordena, char* semana)
@@ -46,15 +46,15 @@ Pais* ordenar(Pais* head, int ordena, char* semana)
         {
             if(ordena == 3 || ordena == 4)
             {
-                x = valores(drt, ordena, semana);
-                y = valores(drt->nextP, ordena, semana);
+                x = valores(drt, ordena, semana);        // x vai conter o valor do week_count do primeiro elemento a comparar
+                y = valores(drt->nextP, ordena, semana); // y vai conter o valor do week_count do segundo elemento a comparar
             }
             if ((strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 1 )|| ((drt->popu) < (drt->nextP->popu) && ordena == 2) || ((drt->popu) == (drt->nextP->popu) && strcmp(drt->pais, drt->nextP->pais) > 0 && ordena == 2) || (x < y) ||((x==y && strcmp(drt->pais, drt->nextP->pais) > 0 && (ordena == 3 || ordena == 4) && x != -1)))
             {
                 // faz a comparação dos valores e faz a troca de posições, variaveis "d" e "e" de auxilio
                 flag = 0;
-                d = esq->nextP;
-                e = drt->nextP->nextP;
+                d = esq->nextP;             //guarda o esq->nextP em d para depois passar para o drt->nextP->nextP
+                e = drt->nextP->nextP;      //guarda o esq->nextP em e para depois passar para o drt->nextP
                 esq->nextP = drt->nextP;
                 drt->nextP->nextP = d;
                 drt->nextP = e;
@@ -73,7 +73,7 @@ Pais* ordenar(Pais* head, int ordena, char* semana)
 
 Pais* Escolher_orde(Pais* head, char* ordenacao, char* ano_ord)
 {
-    if(strcmp(ordenacao,"alfa") == 0)           //apenas para se for esta opção passar os outros
+    if(strcmp(ordenacao,"alfa") == 0)       //Compara as ordenações que existem com o argumento do -S do utilizador
     {
         head = ordenar(head, 1, NULL);
     }

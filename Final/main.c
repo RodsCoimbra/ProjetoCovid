@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
     int opt, sel = 0, restri = 0;
     long long int numero = 0;
     char restricao[6] = {""}, leitura[8] = "all", selecao[9] = {""}, ordenacao[5] = "alfa", l_fich[maxficheiro] = {""}, e_fich[maxficheiro] = {""}, l_ext[4]= {""}, e_ext[4] = {""};
-    char ano1[8] = {""}, ano2[8] = {""}, ano_ord[8] = {""}, ler[max_linha] = {""}, *pend = NULL;
+    char ano1[8] = {""}, ano2[8] = {""}, ano_ord[8] = {""}, *pend = NULL;
     opterr = 0;
     while((opt= getopt(argc, argv,"P:L:D:S:i:o:"))!= -1 ) // loop que recebe as informacoes do utilizador no incio do programa
     {
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
             {
                 help(2);
             }
-            sscanf(pend,"%s", l_ext);
+            sscanf(pend,"%s", l_ext);       //l_ext = extensao do ficheiro de leitura
             break;
 
         case 'o':
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
             {
                 help(5);
             }
-            sscanf(pend,"%s", e_ext);
+            sscanf(pend,"%s", e_ext);      //e_ext = extensao do ficheiro de escrita
             break;
 
         default:    // Mostra a mensagem se for escrito um caracter sem sentido no programa
@@ -111,12 +111,18 @@ int main(int argc, char *argv[])
         }
         }
     }
-    FILE *lp;
-    FILE *ep;
+
+    if(strcmp(l_fich,e_fich) == 0)
+    {
+        help(11);
+    }
+
+    FILE *lp = NULL;    //lp = File pointer de leitura
+    FILE *ep = NULL;    //ep = File pointer de escrita
     //Tipo de leitura
     if(strcmp(l_ext,"csv") == 0)
     {
-        if ((lp = fopen(l_fich, "r"))==NULL)
+        if ((lp = fopen(l_fich, "r"))== NULL)
         {
             help(2);
         }
@@ -155,10 +161,11 @@ int main(int argc, char *argv[])
         fclose(lp);
         help(5);
     }
-
     Pais* head = NULL;
+
     ///Leitura do ficheiro
-    head = leit(head, lp, l_ext, ler, ep, leitura, e_ext);
+    head = leit (head, lp, l_ext, ep, leitura, e_ext);
+
     ///Selecao
     if(sel)
     {
@@ -170,7 +177,6 @@ int main(int argc, char *argv[])
     {
         head = Escolher_restri(head, restricao, numero, ano1, ano2);
     }
-
 
     ///ordenacao
     if(head != NULL && head->nextP != NULL)

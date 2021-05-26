@@ -21,6 +21,10 @@ void criarD(Detalhes* deta,char* indic, int week_count, char* year_week, double 
 {
     Detalhes* aux = deta;
     Detalhes* deta2 = (Detalhes*) calloc(1,sizeof(Detalhes));
+    if (deta2 == NULL)       //caso em que não consegue alocar deta2
+    {
+        help(3);
+    }
     while(aux->nextD != NULL)   // Anda com o aux até ao final da lista de detalhes daquele pais para depois colocar o novo_detalhes
     {
         aux = aux->nextD;
@@ -111,17 +115,17 @@ void escrita(FILE* ep, Pais* head,char* e_ext)
     Pais* atual;
     if(strcmp(e_ext,"csv") == 0)
     {
-        fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n"); //titulo
+        fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n"); //Primeira linha de todos os ficheiros .csv
     }
     Detalhes* atual2;
-    for (atual = head ; atual != NULL; atual = atual->nextP)
+    for (atual = head ; atual != NULL; atual = atual->nextP)                    //Passar todos os elementos da lista Pais
     {
-        for (atual2 = atual->nextD; atual2 != NULL; atual2 = atual2->nextD)
+        for (atual2 = atual->nextD; atual2 != NULL; atual2 = atual2->nextD)     //Passar todos os elementos da lista Detalhes
         {
 
             if(strcmp(e_ext,"dat") == 0)
             {
-                fwrite(atual->pais, sizeof(atual->pais), 1, ep);
+                fwrite(atual->pais, sizeof(atual->pais), 1, ep);            //Escrita dos parametros em binário
                 fwrite(atual->cod_pais, sizeof(atual->cod_pais), 1, ep);
                 fwrite(atual->cont, sizeof(atual->cont), 1, ep);
                 fwrite(&atual->popu, sizeof(atual->popu), 1, ep);
@@ -135,28 +139,29 @@ void escrita(FILE* ep, Pais* head,char* e_ext)
             else
             {
                 fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+                //Escrita dos parametros nas linhas do ficheiro caso seja .csv
             }
         }
     }
 }
 
 
-Pais* leit(Pais* head, FILE* lp, char* l_ext,char* ler, FILE* ep, char* leitura, char* e_ext)
+Pais* leit(Pais* head, FILE* lp, char* l_ext, FILE* ep, char* leitura, char* e_ext)
 {
     int linha = 1,erro = 0;
-    char *pend = NULL, *pend2 = NULL;
+    char ler[max_linha] = {""}, *pend = NULL, *pend2 = NULL;
     if(strcmp(l_ext,"csv") == 0)
     {
-        fgets(ler, max_linha, lp); //para descartar a primeira linha com os titulos
+        fgets(ler, max_linha, lp); //para descartar a primeira linha com o titulo que há em .csv
     }
-    // Ler linhas
     Pais aux;
     Detalhes aux2;
+    ///Leitura do ficheiro caso este seja .dat
     if ((strcmp(l_ext,"dat")) == 0)
     {
         if(strcmp(e_ext,"csv") == 0)
         {
-            fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n");
+            fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n");   //Primeira linha de todos os ficheiros .csv
         }
         while(1)
         {
@@ -169,11 +174,11 @@ Pais* leit(Pais* head, FILE* lp, char* l_ext,char* ler, FILE* ep, char* leitura,
             fread(aux2.year_week, sizeof(aux2.year_week), 1, lp);
             fread(&aux2.lastfteen, sizeof(aux2.lastfteen), 1, lp);
             fread(&aux2.n_dorc, sizeof(aux2.n_dorc), 1, lp);
-            if(feof(lp) != 0)
+            if(feof(lp) != 0)       //Quando acabar de ler o ficheiro binário break
             {
                 break;
             }
-            if(strcmp(e_ext,"dat") == 0){
+            if(strcmp(e_ext,"dat") == 0){       //caso queira escrever de binário para binário
             fwrite(aux.pais, sizeof(aux.pais), 1, ep);
             fwrite(aux.cod_pais, sizeof(aux.cod_pais), 1, ep);
             fwrite(aux.cont, sizeof(aux.cont), 1, ep);
@@ -185,6 +190,7 @@ Pais* leit(Pais* head, FILE* lp, char* l_ext,char* ler, FILE* ep, char* leitura,
             fwrite(&aux2.n_dorc, sizeof(aux2.n_dorc), 1, ep);
             }
             else{
+            //escrita de .dat para .csv
             fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
             }
         }
@@ -197,13 +203,13 @@ Pais* leit(Pais* head, FILE* lp, char* l_ext,char* ler, FILE* ep, char* leitura,
     {
         while(fgets(ler, max_linha, lp)!= NULL)
         {
-            linha++;
-            pend = separar(',', ler,'\0');
-            if(sscanf(ler, " %[^,]", aux.pais) != 1)   //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
+            linha++;                                    //Para saber a linha em que há erro (caso haja erro no ficheiro)
+            pend = separar(',', ler,'\0');              //substituir as virgulas por terminadores de string
+            if(sscanf(ler, " %[^,]", aux.pais) != 1)   //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que a virgulas foi substituida por uma terminador de string)
             {
-                erro=1;
+                erro=1;                                //caso haja algum erro em qualquer argumento ele mete a variável erro a 1
             }
-            pend2 = separar(',', pend,'\0');
+            pend2 = separar(',', pend,'\0');            //repetição para todos os argumentos
             if(sscanf(pend, " %s", aux.cod_pais) != 1)
             {
                 erro=1;
@@ -237,7 +243,7 @@ Pais* leit(Pais* head, FILE* lp, char* l_ext,char* ler, FILE* ep, char* leitura,
             pend2 = separar(',', pend,'\0');
             if(sscanf(pend, " %lf", &(aux2.lastfteen)) != 1)
             {
-                aux2.lastfteen = 0;         //como este número pode não ter dados, assume-se como 0
+                aux2.lastfteen = 0;         //caso este número não tenha dados, assume-se como 0
             }
             if(sscanf(pend2, " %d", &(aux2.n_dorc)) != 1)
             {
@@ -247,12 +253,12 @@ Pais* leit(Pais* head, FILE* lp, char* l_ext,char* ler, FILE* ep, char* leitura,
             {
                 erro=1;
             }
-            if(strcmp(leitura, "all") != 0 && strcmp(leitura, aux.cont) != 0)
+            if(strcmp(leitura, "all") != 0 && strcmp(leitura, aux.cont) != 0)   //Entra dentro do if caso o continente passado em -L seja diferente do continente especificado. Caso seja "all" nunca entra
             {
-                erro = 0;
-                continue;
+                erro = 0;           //Ignora o erro já que a linha é descartada
+                continue;           //Volta ao inicio do while
             }
-            if(erro)
+            if(erro)                //Caso tenha um erro imprime a linha em que tem o erro, fecha todos os ficheiros, dá free da memória e vai para o help
             {
                 printf("Linha --> %d\n", linha);
                 apagar(head);
@@ -261,6 +267,7 @@ Pais* leit(Pais* head, FILE* lp, char* l_ext,char* ler, FILE* ep, char* leitura,
                 help(10);
             }
             head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
+            //Chamar a função criarP para adicionar mais um elemento há lista
         }
     }
     return head;

@@ -30,15 +30,15 @@ Detalhes* selecionar (Pais* head_pais, int select)
 void Escolher_sel(Pais* head, char* selecao)
 {
     Pais* atual;
-    if(strcmp(selecao, "inf") == 0)
+    if(strcmp(selecao, "inf") == 0)                              // Compara as seleções que existem com o argumento do -D do utilizador
     {
-        for (atual = head ; atual != NULL; atual = atual->nextP)
+        for (atual = head ; atual != NULL; atual = atual->nextP) // Vai passando todos os paises e fazendo e chamando a função selecionar para cada um deles
         {
-            atual->nextD = selecionar(atual, 1);
-            atual->nextD->nextD = NULL;
+            atual->nextD = selecionar(atual, 1);                 // o primeiro elemento da lista dos detalhes é substituido pelo elemento que o selecionar retornar
+            atual->nextD->nextD = NULL;                          // Como o -D só seleciona um elemento da lista de detalhes por pais, então o a seguir a esse terá de ser nulo
         }
     }
-    else if(strcmp(selecao, "dea") == 0)
+    else if(strcmp(selecao, "dea") == 0)                        //todos os outros tem o mesmo raciocio que o primeiro
     {
         for (atual = head ; atual != NULL; atual = atual->nextP)
         {

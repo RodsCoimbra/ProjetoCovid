@@ -17,7 +17,7 @@ void help(int helpvar)
         perror("O ficheiro de entrada não tem dados.");
         break;
     case 5:
-        perror("Nao consegui abrir o ficheiro de escrita (possivelmente esta aberto ou não foi passado o argumento)");
+        perror("Ficheiro de escrita inválido (possivelmente esta aberto ou não foi passado o argumento)");
         break;
     case 6:
         perror("O argumento -P está errado.");
@@ -33,6 +33,9 @@ void help(int helpvar)
         break;
     case 10:
         perror("O ficheiro contêm um erro na linha escrita em cima.");
+        break;
+    case 11:
+        perror("O ficheiros de entrada e de saida são os mesmos.");
         break;
     }
 
@@ -81,17 +84,17 @@ int verificacao_week(char* str)
 {
     int a;
     for(a=0; a != 7; a++)
-    {
-        if(isdigit(str[a]) == 0 && a != 4)
+    {                                        //formato que a string tem de ter é yyyy-ww
+        if(isdigit(str[a]) == 0 && a != 4)  //a função isdigit retorna 0 caso não seja um número, logo se qualquer um dos carateres não for um número sem ser o 5º digito(o valor que contém '-') entra no if
         {
             return (1);
         }
-        else if(a == 4 && str[4] != '-')
+        else if(a == 4 && str[4] != '-')    //verifica se o 5º digito é '-', se não for retorna 1
         {
             return(1);
         }
     }
-    return (0);
+    return (0);                             //retorna 0 caso não tenha erro para não entrar no if do erro
 }
 
 
@@ -100,11 +103,11 @@ int verificacao_palavra(char* str)
     int a;
     for(a=0; a < strlen(str); a++)
     {
-        if(isdigit(str[a]) != 0)
+        if(isdigit(str[a]) != 0)    //a função isdigit retorna 0 caso não seja um número, logo se qualquer um dos carateres for um número entra no if
         {
             return (1);
         }
     }
-    return (0);
+    return (0); //retorna 0 caso não tenha erro para não entrar no if do erro
 }
 
