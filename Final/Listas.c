@@ -104,3 +104,164 @@ void apagar(Pais* head)
         free(aux);
     }
 }
+
+
+void escrita(FILE* ep, Pais* head,char* e_ext)
+{
+    Pais* atual;
+    if(strcmp(e_ext,"csv") == 0)
+    {
+        fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n"); //titulo
+    }
+    Detalhes* atual2;
+    for (atual = head ; atual != NULL; atual = atual->nextP)
+    {
+        for (atual2 = atual->nextD; atual2 != NULL; atual2 = atual2->nextD)
+        {
+
+            if(strcmp(e_ext,"dat") == 0)
+            {
+                fwrite(atual->pais, sizeof(atual->pais), 1, ep);
+                fwrite(atual->cod_pais, sizeof(atual->cod_pais), 1, ep);
+                fwrite(atual->cont, sizeof(atual->cont), 1, ep);
+                fwrite(&atual->popu, sizeof(atual->popu), 1, ep);
+                fwrite(atual2->indic, sizeof(atual2->indic), 1, ep);
+                fwrite(&atual2->week_count, sizeof(atual2->week_count), 1, ep);
+                fwrite(atual2->year_week, sizeof(atual2->year_week), 1, ep);
+                fwrite(&atual2->lastfteen, sizeof(atual2->lastfteen), 1, ep);
+                fwrite(&atual2->n_dorc, sizeof(atual2->n_dorc), 1, ep);
+            }
+
+            else
+            {
+                fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", atual->pais, atual->cod_pais, atual->cont, atual->popu, atual2->indic, atual2->week_count, atual2->year_week, atual2->lastfteen, atual2->n_dorc);
+            }
+        }
+    }
+}
+
+
+Pais* leit(Pais* head, FILE* lp, char* l_ext,char* ler, FILE* ep, char* leitura, char* e_ext)
+{
+    int linha = 1,erro = 0;
+    char *pend = NULL, *pend2 = NULL;
+    if(strcmp(l_ext,"csv") == 0)
+    {
+        fgets(ler, max_linha, lp); //para descartar a primeira linha com os titulos
+    }
+    // Ler linhas
+    Pais aux;
+    Detalhes aux2;
+    if ((strcmp(l_ext,"dat")) == 0)
+    {
+        if(strcmp(e_ext,"csv") == 0)
+        {
+            fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n");
+        }
+        while(1)
+        {
+            fread(aux.pais, sizeof(aux.pais), 1, lp);
+            fread(aux.cod_pais, sizeof(aux.cod_pais), 1, lp);
+            fread(aux.cont, sizeof(aux.cont), 1, lp);
+            fread(&aux.popu, sizeof(aux.popu), 1, lp);
+            fread(aux2.indic, sizeof(aux2.indic), 1, lp);
+            fread(&aux2.week_count, sizeof(aux2.week_count), 1, lp);
+            fread(aux2.year_week, sizeof(aux2.year_week), 1, lp);
+            fread(&aux2.lastfteen, sizeof(aux2.lastfteen), 1, lp);
+            fread(&aux2.n_dorc, sizeof(aux2.n_dorc), 1, lp);
+            if(feof(lp) != 0)
+            {
+                break;
+            }
+            if(strcmp(e_ext,"dat") == 0){
+            fwrite(aux.pais, sizeof(aux.pais), 1, ep);
+            fwrite(aux.cod_pais, sizeof(aux.cod_pais), 1, ep);
+            fwrite(aux.cont, sizeof(aux.cont), 1, ep);
+            fwrite(&aux.popu, sizeof(aux.popu), 1, ep);
+            fwrite(aux2.indic, sizeof(aux2.indic), 1, ep);
+            fwrite(&aux2.week_count, sizeof(aux2.week_count), 1, ep);
+            fwrite(aux2.year_week, sizeof(aux2.year_week), 1, ep);
+            fwrite(&aux2.lastfteen, sizeof(aux2.lastfteen), 1, ep);
+            fwrite(&aux2.n_dorc, sizeof(aux2.n_dorc), 1, ep);
+            }
+            else{
+            fprintf(ep, "%s,%s,%s,%d,%s,%d,%s,%f,%d\n", aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
+            }
+        }
+        printf("\nO seu ficheiro foi concluido!\n\n");
+        fclose(lp);
+        fclose(ep);
+        exit(0);
+    }
+    else
+    {
+        while(fgets(ler, max_linha, lp)!= NULL)
+        {
+            linha++;
+            pend = separar(',', ler,'\0');
+            if(sscanf(ler, " %[^,]", aux.pais) != 1)   //Como pode ter espaços usei [^,] para ele ler tudo até ao terminador da string(já que as virgulas foram substituidas então não à problema)
+            {
+                erro=1;
+            }
+            pend2 = separar(',', pend,'\0');
+            if(sscanf(pend, " %s", aux.cod_pais) != 1)
+            {
+                erro=1;
+            }
+            pend = separar(',', pend2,'\0');
+            if(sscanf(pend2, " %s", aux.cont) != 1)
+            {
+                erro=1;
+            }
+
+            pend2 = separar(',', pend,'\0');
+            if(sscanf(pend, " %d", &(aux.popu)) != 1)
+            {
+                erro=1;
+            }
+            pend = separar(',', pend2,'\0');
+            if(sscanf(pend2, " %s", aux2.indic)!= 1)
+            {
+                erro=1;
+            }
+            pend2 = separar(',', pend,'\0');
+            if(sscanf(pend, " %d", &(aux2.week_count)) != 1)
+            {
+                erro=1;
+            }
+            pend = separar(',', pend2,'\0');
+            if(sscanf(pend2, " %s", aux2.year_week) != 1)
+            {
+                erro=1;
+            }
+            pend2 = separar(',', pend,'\0');
+            if(sscanf(pend, " %lf", &(aux2.lastfteen)) != 1)
+            {
+                aux2.lastfteen = 0;         //como este número pode não ter dados, assume-se como 0
+            }
+            if(sscanf(pend2, " %d", &(aux2.n_dorc)) != 1)
+            {
+                erro=1;
+            }
+            if(verificacao_week(aux2.year_week) || verificacao_palavra(aux.pais) || verificacao_palavra(aux.cod_pais) || (strcmp(aux2.indic,"cases") != 0 && strcmp(aux2.indic,"deaths") != 0) || verificacao_palavra(aux.cont) || aux.popu <= 0 || aux2.week_count < 0 || aux2.lastfteen < 0 || aux2.n_dorc < 0)
+            {
+                erro=1;
+            }
+            if(strcmp(leitura, "all") != 0 && strcmp(leitura, aux.cont) != 0)
+            {
+                erro = 0;
+                continue;
+            }
+            if(erro)
+            {
+                printf("Linha --> %d\n", linha);
+                apagar(head);
+                fclose(lp);
+                fclose(ep);
+                help(10);
+            }
+            head = criarP (head, aux.pais, aux.cod_pais, aux.cont, aux.popu, aux2.indic, aux2.week_count, aux2.year_week, aux2.lastfteen, aux2.n_dorc);
+        }
+    }
+    return head;
+}

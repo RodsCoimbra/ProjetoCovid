@@ -105,7 +105,6 @@ void criarD(Detalhes*,char*, int, char*, double, int);
  */
 Pais* criarP (Pais*, char*, char*, char*,int, char*, int, char*, double, int);
 
-
 /** \brief
  *
  * \param char
@@ -192,5 +191,8 @@ Pais* Escolher_restri(Pais*,char*,long long int, char*, char*);
  */
 Pais* Escolher_orde(Pais*, char*, char*);
 
+void escrita(FILE*, Pais*, char*);
+
+Pais* leit(Pais*, FILE*, char*,char*, FILE*, char*, char*);
 
 #endif // projeto_covid
