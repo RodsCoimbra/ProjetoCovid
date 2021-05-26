@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-    int opt, sel = 0, linha = 1, erro = 0, i;
+    int opt, sel = 0, linha = 1, erro = 0, restri = 0;
     long long int numero = 0;
     char restricao[6] = {""}, leitura[8] = "all", selecao[9] = {""}, ordenacao[5] = "alfa", l_fich[maxficheiro] = {""}, e_fich[maxficheiro] = {""}, l_ext[4]= {""}, e_ext[4] = {""};
     char ano1[8] = {""}, ano2[8] = {""}, ano_ord[8] = {""}, ler[max_linha] = {""}, *pend = NULL, *pend2 = NULL;
@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
         switch (opt)
         {
         case 'P':
+            restri = 1;
             sscanf(optarg," %s", restricao);
             if (strcmp("min", restricao) == 0 || strcmp("max", restricao) == 0)
             {
@@ -86,20 +87,8 @@ int main(int argc, char *argv[])
 
         case 'i':
             sscanf(optarg," %s", l_fich);
-            for(i=0; i < strlen(l_fich); i++)
-            {
-                if(l_fich[i] == '.')
-                {
-                    i = -1; //Flag com um número impossivel de o i ter dentro do for
-                    break;
-                }
-            }
-            if(i != -1)
-            {
-                help(2);
-            }
             pend = separar('.', l_fich,'.');
-            if(pend == pend2)               //Caso o utilizador não meta extensão do ficheiro
+            if(pend == NULL)               //Caso o utilizador não meta extensão do ficheiro
             {
                 help(2);
             }
@@ -108,24 +97,12 @@ int main(int argc, char *argv[])
 
         case 'o':
             sscanf(optarg," %s", e_fich);
-            for(i=0; i < strlen(e_fich); i++)
-            {
-                if(e_fich[i] == '.')
-                {
-                    i = -1; //Flag com um número impossivel de o i ter dentro do for
-                    break;
-                }
-            }
-            if(i != -1)
-            {
-                help(5);
-            }
             pend2 = separar('.', e_fich,'.');
-            if(pend == pend2)               //Caso o utilizador não meta extensão do ficheiro
+            if(pend2 == NULL)               //Caso o utilizador não meta extensão do ficheiro
             {
                 help(5);
             }
-            sscanf(pend,"%s", e_ext);
+            sscanf(pend2,"%s", e_ext);
             break;
 
         default:    // Mostra a mensagem se for escrito um caracter sem sentido no programa
@@ -216,38 +193,38 @@ int main(int argc, char *argv[])
             {
                 erro=1;
             }
-            pend2 = separar(',', ler,'\0');
+            pend2 = separar(',', pend,'\0');
             if(sscanf(pend, " %s", aux.cod_pais) != 1)
             {
                 erro=1;
             }
-            pend = separar(',', ler,'\0');
+            pend = separar(',', pend2,'\0');
             if(sscanf(pend2, " %s", aux.cont) != 1)
             {
                 erro=1;
             }
 
-            pend2 = separar(',', ler,'\0');
+            pend2 = separar(',', pend,'\0');
             if(sscanf(pend, " %d", &(aux.popu)) != 1)
             {
                 erro=1;
             }
-            pend = separar(',', ler,'\0');
+            pend = separar(',', pend2,'\0');
             if(sscanf(pend2, " %s", aux2.indic)!= 1)
             {
                 erro=1;
             }
-            pend2 = separar(',', ler,'\0');
+            pend2 = separar(',', pend,'\0');
             if(sscanf(pend, " %d", &(aux2.week_count)) != 1)
             {
                 erro=1;
             }
-            pend = separar(',', ler,'\0');
+            pend = separar(',', pend2,'\0');
             if(sscanf(pend2, " %s", aux2.year_week) != 1)
             {
                 erro=1;
             }
-            pend2 = separar(',', ler,'\0');
+            pend2 = separar(',', pend,'\0');
             if(sscanf(pend, " %lf", &(aux2.lastfteen)) != 1)
             {
                 aux2.lastfteen = 0;         //como este número pode não ter dados, assume-se como 0
@@ -277,95 +254,26 @@ int main(int argc, char *argv[])
         }
     }
 
-
-    Pais* atual;
-
     ///Selecao
     if(sel)
     {
-        if(strcmp(selecao, "inf") == 0)
-        {
-            for (atual = head ; atual != NULL; atual = atual->nextP)
-            {
-                atual->nextD = selecionar(atual, 1);
-                atual->nextD->nextD = NULL;
-            }
-        }
-        else if(strcmp(selecao, "dea") == 0)
-        {
-            for (atual = head ; atual != NULL; atual = atual->nextP)
-            {
-                atual->nextD = selecionar(atual, 2);
-                atual->nextD->nextD = NULL;
-            }
-        }
-        else if(strcmp(selecao, "racioinf") == 0)
-        {
-            for (atual = head ; atual != NULL; atual = atual->nextP)
-            {
-                atual->nextD = selecionar(atual, 3);
-                atual->nextD->nextD = NULL;
-            }
-        }
-        else if(strcmp(selecao, "raciodea") == 0)
-        {
-            for (atual = head ; atual != NULL; atual = atual->nextP)
-            {
-                atual->nextD = selecionar(atual, 4);
-                atual->nextD->nextD = NULL;
-            }
-        }
+        Escolher_sel(head, selecao);
     }
-
 
     ///restricao
-    if(strcmp(restricao, "min") == 0)
+    if(restri)
     {
-        head = restringir_pop(head, numero,1);
+        head = Escolher_restri(head, restricao, numero, ano1, ano2);
     }
-
-    else if(strcmp(restricao, "max") == 0)
-    {
-        head = restringir_pop(head, numero,2);
-    }
-
-    else if(strcmp(restricao, "date") == 0)
-    {
-        for (atual = head ; atual != NULL; atual = atual->nextP)
-        {
-            atual->nextD = restringir_week(atual, ano1, ano2, 3);
-        }
-    }
-    else if(strcmp(restricao, "dates") == 0)
-    {
-        for (atual = head ; atual != NULL; atual = atual->nextP)
-        {
-            atual->nextD = restringir_week(atual, ano1, ano2, 4);
-        }
-    }
-
 
 
     ///ordenacao
     if(head != NULL && head->nextP != NULL)
     {
-        head = ordenar(head, 1, NULL);              //organiza sempre por ordem alfabetica para depois caso haja empate já vir organizado por ordem alfabetica
-        if(strcmp(ordenacao,"alfa") == 0)           //apenas para ver se opção é válida
-        {}
-        else if(strcmp(ordenacao,"pop") == 0)
-        {
-            head = ordenar(head, 2,NULL);
-        }
-        else if(strcmp(ordenacao,"inf") == 0)
-        {
-            head = ordenar(head, 3, ano_ord);
-        }
-        else if(strcmp(ordenacao,"dea") == 0)
-        {
-            head = ordenar(head, 4, ano_ord);
-        }
+        head = Escolher_orde(head, ordenacao, ano_ord);
     }
     ///Escrita de dados
+    Pais* atual;
     if(strcmp(e_ext,"csv") == 0)
     {
         fprintf(ep, "country,country_code,continent,population,indicator,weekly_count,year_week,rate_14_day,cumulative_count\n"); //titulo

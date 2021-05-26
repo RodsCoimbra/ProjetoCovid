@@ -9,7 +9,8 @@ Pais* encontra_pais(char* cod_pais,Pais* head)
     }
     for(aux = head; aux != NULL; aux = aux->nextP)  // Executa até percorrer a lista toda
     {
-        if(strcmp(cod_pais,aux->cod_pais) == 0){    //comparacao com o codigo dos paises, se o pais já tiver um node_pais criado dá return do endereço desse node
+        if(strcmp(cod_pais,aux->cod_pais) == 0)     //comparacao com o codigo dos paises, se o pais já tiver um node_pais criado dá return do endereço desse node
+        {
             return aux;
         }
     }

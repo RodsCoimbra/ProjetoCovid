@@ -64,7 +64,7 @@ char* separar(char sep, char* str, char troca)
 {
     int i;
     char* psep = NULL;
-    for(i=0; str[i] != EOF ; i++)   // Executa enquanto não chegar ao final do ficheiro
+    for(i=0; str[i] != '\0' ; i++)   // Executa enquanto não chegar ao final da string
     {
         if(str[i] == sep)       // Quando encontrar o carater passado na variavel "sep" muda esse carater para o que for passado pela variavel "troca" e retorna o endereço do carater a seguir ao trocado
         {
@@ -77,29 +77,34 @@ char* separar(char sep, char* str, char troca)
 }
 
 
-int verificacao_week(char* str){
-int a;
-for(a=0; a != 7; a++){
-    if(isdigit(str[a]) == 0 && a != 4)
-       {
-         return (1);
-       }
-    else if(a == 4 && str[4] != '-'){
-        return(1);
+int verificacao_week(char* str)
+{
+    int a;
+    for(a=0; a != 7; a++)
+    {
+        if(isdigit(str[a]) == 0 && a != 4)
+        {
+            return (1);
+        }
+        else if(a == 4 && str[4] != '-')
+        {
+            return(1);
+        }
     }
-}
-return (0);
+    return (0);
 }
 
 
-int verificacao_palavra(char* str){
-int a;
-for(a=0; a < strlen(str); a++){
-    if(isdigit(str[a]) != 0)
-       {
-         return (1);
-       }
-}
-return (0);
+int verificacao_palavra(char* str)
+{
+    int a;
+    for(a=0; a < strlen(str); a++)
+    {
+        if(isdigit(str[a]) != 0)
+        {
+            return (1);
+        }
+    }
+    return (0);
 }
 

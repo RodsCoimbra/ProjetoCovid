@@ -22,7 +22,7 @@ typedef struct Detalhes   // lista que está dentro da lista "pais"
 
 typedef struct Pais
 {
-    char pais[35];
+    char pais[46];
     char cod_pais[4];
     char cont[8];
     int popu;
@@ -162,6 +162,35 @@ int verificacao_week(char*);
  * \return int
  *
  */
-int verificacao_palavra(char* str);
+int verificacao_palavra(char*);
+
+/** \brief
+ *
+ * \param Pais*
+ * \param char*
+ * \return void
+ *
+ */
+void Escolher_sel(Pais*, char*);
+
+/** \brief
+ *
+ * \param Pais*
+ * \param char*
+ * \return Pais*
+ *
+ */
+Pais* Escolher_restri(Pais*,char*,long long int, char*, char*);
+
+/** \brief
+ *
+ * \param Pais*
+ * \param char*
+ * \param char*
+ * \return Pais*
+ *
+ */
+Pais* Escolher_orde(Pais*, char*, char*);
+
 
 #endif // projeto_covid

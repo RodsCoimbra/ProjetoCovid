@@ -59,3 +59,32 @@ Detalhes* restringir_week(Pais* head_pais, char* ano1, char* ano2, int restringi
     return paux->nextD;
 }
 
+Pais* Escolher_restri(Pais* head,char* restricao, long long int numero, char* ano1, char* ano2)
+{
+    Pais* atual;
+    if(strcmp(restricao, "min") == 0)
+    {
+        head = restringir_pop(head, numero,1);
+    }
+
+    else if(strcmp(restricao, "max") == 0)
+    {
+        head = restringir_pop(head, numero,2);
+    }
+
+    else if(strcmp(restricao, "date") == 0)
+    {
+        for (atual = head ; atual != NULL; atual = atual->nextP)
+        {
+            atual->nextD = restringir_week(atual, ano1, ano2, 3);
+        }
+    }
+    else if(strcmp(restricao, "dates") == 0)
+    {
+        for (atual = head ; atual != NULL; atual = atual->nextP)
+        {
+            atual->nextD = restringir_week(atual, ano1, ano2, 4);
+        }
+    }
+    return head;
+}

@@ -69,3 +69,24 @@ Pais* ordenar(Pais* head, int ordena, char* semana)
     head = paux->nextP;
     return head;
 }
+
+
+Pais* Escolher_orde(Pais* head, char* ordenacao, char* ano_ord)
+{
+    head = ordenar(head, 1, NULL);              //organiza sempre por ordem alfabetica para depois caso haja empate já vir organizado por ordem alfabetica
+    if(strcmp(ordenacao,"alfa") == 0)           //apenas para se for esta opção passar os outros
+    {}
+    else if(strcmp(ordenacao,"pop") == 0)
+    {
+        head = ordenar(head, 2,NULL);
+    }
+    else if(strcmp(ordenacao,"inf") == 0)
+    {
+        head = ordenar(head, 3, ano_ord);
+    }
+    else if(strcmp(ordenacao,"dea") == 0)
+    {
+        head = ordenar(head, 4, ano_ord);
+    }
+    return head;
+}
