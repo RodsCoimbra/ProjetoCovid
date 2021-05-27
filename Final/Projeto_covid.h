@@ -12,21 +12,21 @@
 
 typedef struct Detalhes   // lista que está dentro da lista "pais"
 {
-    char indic[7];  // Inoforma se a linha indica numero de infetados ou mortes
-    int week_count;  // Numero de mortos ou casos na semana
+    char indic[7];      // Informa se a linha indica numero de infetados ou mortes
+    int week_count;     // Numero de mortos ou casos na semana
     char year_week[8];  // Semana do ano a que se referem os dados
-    double lastfteen; // racio
-    int n_dorc; // numero de deaths or cases
+    double lastfteen;   // racio
+    int n_dorc;         // numero de deaths or cases
     struct Detalhes *nextD; // nextD é o pointer do detalhe seguinte
 } Detalhes;
 
 typedef struct Pais
 {
-    char pais[47]; // tamanho do maior nome de pais existente (Independent and Sovereign Republic of Kiribati). Não considerado The United Kingdom of Great Britain and Northern Ireland pois já havia united kingdom nos exemplos.
-    char cod_pais[4];   // código identificador do País 
-    char cont[8];   // continente em que o Páis analizado pertence
-    int popu;   // população do País em análise
-    Detalhes *nextD;    // pointer para o próximo node da lista de detalhes
+    char pais[47];      //Tamanho do maior nome de pais existente (Independent and Sovereign Republic of Kiribati). Não considerado The United Kingdom of Great Britain and Northern Ireland pois já havia united kingdom nos exemplos.
+    char cod_pais[4];   // código identificador do País
+    char cont[8];       // continente em que o País analizado pertence
+    int popu;           // população do País em anális
+    Detalhes *nextD;    // pointer para o node da lista de detalhes
     struct Pais *nextP; // nextP é o pointer do pais seguinte
 } Pais;
 
@@ -34,99 +34,101 @@ typedef struct Pais
 
 /** \brief Função que imprime avisos de erro e o menu de ajuda que contém todas as instruções referentes ao programa
  *
- * \param int Recebe o helpvar, número escolhido para cada tipo de erro
+ * \param int: Recebe o helpvar, número escolhido para cada tipo de erro
  * \return void
  *
  */
 void help(int);
 
 
-/** \brief
+/** \brief A função executa o comando dado tanto para restringir os dados por população minima e máxima
  *
- * \param Pais* Recebe a "head", pointer que aponta para o primeiro elemento da lista de paises
- * \param long Long int recebe o "pop", variavel que contém o valor introduzido no comando da restrição
- * \param int Recebe "restringir", flag que permite com a mesma função executar restrições diferentes
- * \return Pais*  --------------
+ * \param Pais*: Recebe a "head", pointer que aponta para o primeiro elemento da lista de paises
+ * \param long Long int: Recebe o "pop", variavel que contém o valor introduzido no comando da restrição e que simboliza a população
+ * \param int: Recebe "restringir", flag que permite com a mesma função executar restrições diferentes
+ * \return Pais*: Retorna a nova head da lista principal(lista Pais)
  *
  */
 Pais* restringir_pop(Pais*,long long int, int);
 
-/** \brief  A função executa o comando dado tanto para restringir os dados a uma semana como para o intervalo entre duas semanas decidido no inicio do programa
+/** \brief A função executa o comando dado tanto para restringir os dados a uma semana como para o intervalo entre duas semanas decidido no inicio do programa
  *
- * \param Pais* Recebe "head_pais", pointer que aponta para o pais ????primeiro????
- * \param char* Recebe "ano1", pointer que aponta para a data introduzida na inicialização do programa
- * \param char* Recebe "ano2", pointer que aponta para a data introduzida na inicialização do programa
- * \param int recebe "restringir", flag que permite com a mesma função executar restrições diferentes
- * \return Detalhes* -----------
+ * \param Pais*: Recebe "head_pais", endereço do nó de cada pais da lista Pais
+ * \param char*: Recebe "ano1", pointer que aponta para a data introduzida na inicialização do programa
+ * \param char*: Recebe "ano2", pointer que aponta para a data introduzida na inicialização do programa
+ * \param int: Recebe "restringir", flag que permite com a mesma função executar restrições diferentes
+ * \return Detalhes*: Retorna a nova head da lista secundária(lista Detalhes)
  *
  */
 Detalhes* restringir_week(Pais*, char*, char*, int);
 
-/** \brief  A função permite fazer a todos os tipos de seleção que podem ser selecionados no incio do programa, contendo uma flag para a separação de funções
+
+/** \brief A função permite fazer todos os tipos de seleção que podem ser selecionados no incio do programa
  *
- * \param Pais* Recebe "head_pais", pointer que aponta para o pais ????primeiro????
- * \param int Recebe "select", flag que permite com a mesma função executar restrições diferentes
- * \return Detalhes* ????
+ * \param Pais*: Recebe "head_pais", endereço do nó de cada pais da lista Pais
+ * \param int: Recebe "select", flag que permite com a mesma função executar restrições diferentes
+ * \return Detalhes*: Retorna a nova head da lista secundária(lista Detalhes)
  *
  */
 Detalhes* selecionar (Pais*, int);
 
 
-/** \brief  A função percorre a lista de paises á procura de o node de um pais especifico e indica se já existe ou não, esta função é essencial ao funcionamento da função criarP
+/** \brief A função percorre a lista de paises à procura do node de um pais especifico e indica se já existe ou não, esta função é essencial ao funcionamento da função criarP
  *
- * \param char* Recebe a "head", pointer que aponta para o primeiro elemento da lista de paises
- * \param Pais* Struct da lista de paises que cotem os dados fixos
- * \return Pais* Se o pais da linha lida já tiver um node criado a função retorna o endereço desse node de País, se o país ainda não existir na lista de paises é retornado NULL
+ * \param char*: Recebe a sigla do pais para comparar com as já existentes
+ * \param Pais*: Recebe a "head", pointer que aponta para o primeiro elemento da lista de paises
+ * \return Pais*: Se o pais da linha lida já tiver um node criado a função retorna o endereço desse node de País, se o país ainda não existir na lista de paises é retornado NULL
  *
  */
 Pais* encontra_pais(char*,Pais*);
 
 
-/** \brief  A função tem o trabalho de criar nodes da lista de detalhes
+/** \brief  A função serve para criar nodes da lista de detalhes
  *
- * \param Detalhes* ???deta???
- * \param char* Recebe "indic", pointer que aponta para variavel na struc que indica se a linha corresponde a cases or deaths
- * \param int valor de infetado/mortes na semana
- * \param char* ano e numero da semana a que os dados da linha pertencem
- * \param double racio de infetados/mortes
- * \param int valor de infetados/mortes totais ????? é ?????
+ * \param Detalhes*: Recebe "deta", endereço da head da lista secundária(lista Detalhes) de cada pais
+ * \param char*: Recebe "indic", pointer que aponta para a variavel na struct que indica se a linha corresponde a cases or deaths
+ * \param int: valor de infetado/mortes na semana
+ * \param char*: ano e numero da semana a que os dados da linha pertencem
+ * \param double: racio de infetados/mortes
+ * \param int: valor de infetados/mortes totais
  * \return void
  *
  */
 void criarD(Detalhes*,char*, int, char*, double, int);
 
 
-/** \brief  A função tem o trabalho de criar nodes da lista de países
+/** \brief A função serve para criar nodes da lista de países
  *
- * \param Pais* Head da lista principal(lista Pais)
- * \param char* Nome do pais
- * \param char* Código do país a analizar
- * \param char* Continente em que o país se encontra situado
- * \param int   População do país a analizar
- * \param char* Indicador se a linha se refere a infetados ou mortes
- * \param int   Infetados/Mortes na semana em questão
- * \param char* Ano e numero da semana a que os dados da linha pertencem
- * \param double Racio
- * \param int   valor de infetados/mortes totais ????? é ?????
- * \return Pais* Head da lista principal(lista Pais)
+ * \param Pais*:    Head da lista principal(lista Pais)
+ * \param char*:    Nome do pais
+ * \param char*:    Código do país a analisar
+ * \param char*:    Continente em que o país se encontra situado
+ * \param int:      População do país a analisar
+ * \param char*:    Indicador se a linha se refere a infetados ou mortes
+ * \param int:      Infetados/Mortes na semana em questão
+ * \param char*:    Ano e numero da semana a que os dados da linha pertencem
+ * \param double:   Racio
+ * \param int:      valor de infetados/mortes totais
+ * \return Pais*:   Head da lista principal(lista Pais)
  *
  */
 Pais* criarP (Pais*, char*, char*, char*,int, char*, int, char*, double, int);
 
-/** \brief  A função separa elementos numa string separados por um carater escolhido e guardado em "sep"
+/** \brief A função procura o elemento dado em "sep" numa string, substitui por "troca" e retorna o endereço do carater a seguir ao trocado
  *
- * \param char  Carater a mudar na string ?duvida se é msm isto?
- * \param char* String que se pretende separar
- * \param char  Carater que se presente colocar em vez do carater que está no "sep" ?é isto?
- * \return char*    String separada ??
+ * \param char:  Carater a encontrar na string
+ * \param char*: String que se pretende separar
+ * \param char:  Carater que se presente colocar em vez do carater que está no "sep"
+ * \return char*:  Endereço do carater a seguir ao encontrado ou NULL caso não encontre "sep"
  *
  */
 char* separar(char, char*, char);
 
 
-/** \brief A função é utilizada para dar free na memória alocada e por sua vez apagar os dados em questão
+
+/** \brief  A função é utilizada para dar free na memória alocada
  *
- * \param Pais* Head da lista principal(lista Pais)
+ * \param Pais*: Head da lista principal(lista Pais)
  * \return void
  *
  */
@@ -134,12 +136,12 @@ void apagar(Pais*);
 
 
 /** \brief Função usada para a ordenação por infetados ou por mortes. Esta passa por todos os valores da lista secundária(lista dos Detalhes)
- *         e retorna o valor de week_count quando tanto a razão(cases ou deaths) como a semana são iguais às especificadas pelo utilizador
+ *         e retorna o valor de week_count quando, tanto a razão(cases ou deaths) como a semana são iguais às especificadas pelo utilizador
  *
  * \param Pais*: Endereço do nó de cada pais da lista Pais
  * \param int: número que indica que modo de -S foi selecionado(3 é -S inf; 4 é -S dea)
  * \param char*: semana escolhida pelo utilizador para ordenar
- * \return int: valor do week_count para ser usado na ordenação ou -1 (flag para a funçao ordena, é negativo pois week_count nunca pode ser esse valor) caso essa semana não exista no programa
+ * \return int: valor do week_count para ser usado na ordenação ou -1 (flag para a funçao ordena, é negativo pois week_count nunca pode ser esse valor) caso essa semana não exista no ficheiro de leitura depois das tratamentos anteriores
  *
  */
 int valores(Pais*, int, char*);
@@ -185,7 +187,7 @@ void Escolher_sel(Pais*, char*);
  *
  * \param Pais*: Head da lista principal(lista Pais)
  * \param char*: Argumento passado pelo utilizador no -P
- * \param int long long: população caso seja -P min ou -P max e 0 caso contrário
+ * \param int long long: população caso o utilizador use o -P min ou -P max e 0 caso contrário
  * \param char*: Data passada pelo utilizador no -P date ou -P dates
  * \param char*: 2ª data passada pelo utilizador para o -P dates
  * \return Pais*: Head da lista principal(lista Pais)
@@ -203,24 +205,24 @@ Pais* Escolher_restri(Pais*,char*,long long int, char*, char*);
  */
 Pais* Escolher_orde(Pais*, char*, char*);
 
-/** \brief
+/** \brief Escrita dos dados já tratados no ficheiro de escrita
  *
  * \param FILE*: Ficheiro em que se vai escrever
  * \param Pais*: Head da lista principal(lista Pais)
- * \param char*: extensão do ficheiro de escrita(.csv ou .dat)
+ * \param char*: Extensão do ficheiro de escrita(.csv ou .dat)
  * \return void
  *
  */
 void escrita(FILE*, Pais*, char*);
 
-/** \brief
+/** \brief Leitura dos argumentos e caso o ficheiro de leitura seja .dat ele também escreve
  *
  * \param Pais*: Head da lista principal(lista Pais)
  * \param FILE*: Ficheiro em que se vai ler
- * \param char*: extensão do ficheiro de leitura(.csv ou .dat)
+ * \param char*: Extensão do ficheiro de leitura(.csv ou .dat)
  * \param FILE*: Ficheiro em que se vai escrever
  * \param char*: Argumento passado pelo utilizador no -L ou "all" caso o utilizador não introduza nada
- * \param char*: extensão do ficheiro de escrita(.csv ou .dat)
+ * \param char*: Extensão do ficheiro de escrita(.csv ou .dat)
  * \return Pais*: Head da lista principal(lista Pais)
  *
  */

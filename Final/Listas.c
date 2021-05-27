@@ -1,5 +1,9 @@
 #include "Projeto_covid.h"
+/** Comentários mais completos de cada função no .h
+*/
 
+/** \brief A função percorre a lista de paises à procura do node de um pais especifico e indica se já existe ou não, esta função é essencial ao funcionamento da função criarP
+ */
 Pais* encontra_pais(char* cod_pais,Pais* head)
 {
     Pais* aux;
@@ -17,6 +21,8 @@ Pais* encontra_pais(char* cod_pais,Pais* head)
     return NULL;    //caso não encontre retorna NULL
 }
 
+/** \brief  A função serve para criar nodes da lista de detalhes
+ */
 void criarD(Detalhes* deta,char* indic, int week_count, char* year_week, double lastfteen, int n_dorc)
 {
     Detalhes* aux = deta;
@@ -38,6 +44,8 @@ void criarD(Detalhes* deta,char* indic, int week_count, char* year_week, double 
     strcpy(deta2->indic, indic);
 }
 
+/** \brief A função serve para criar nodes da lista de países
+ */
 Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char* indic, int week_count, char* year_week, double lastfteen, int n_dorc)
 {
     Pais* P_atual;
@@ -89,6 +97,8 @@ Pais* criarP (Pais* head, char* pais, char* cod_pais, char* cont,int popu, char*
     return head;
 }
 
+/** \brief  A função é utilizada para dar free na memória alocada
+ */
 void apagar(Pais* head)
 {
 
@@ -109,7 +119,8 @@ void apagar(Pais* head)
     }
 }
 
-
+/** \brief Escrita dos dados já tratados no ficheiro de escrita
+*/
 void escrita(FILE* ep, Pais* head,char* e_ext)
 {
     Pais* atual;
@@ -146,6 +157,8 @@ void escrita(FILE* ep, Pais* head,char* e_ext)
 }
 
 
+/** \brief Leitura dos argumentos e caso o ficheiro de leitura seja .dat ele também escreverá
+*/
 Pais* leit(Pais* head, FILE* lp, char* l_ext, FILE* ep, char* leitura, char* e_ext)
 {
     int linha = 1,erro = 0;

@@ -1,5 +1,9 @@
 #include "Projeto_covid.h"
+/** Comentários mais completos de cada função no .h
+*/
 
+/** \brief A função executa o comando dado tanto para restringir os dados por população minima e máxima
+ */
 Pais* restringir_pop(Pais* head, long long int pop, int restringir)
 {
     Pais aux;   // variavel para auxilio da funcao
@@ -30,6 +34,8 @@ Pais* restringir_pop(Pais* head, long long int pop, int restringir)
     return paux->nextP;
 }
 
+/** \brief A função executa o comando dado tanto para restringir os dados a uma semana como para o intervalo entre duas semanas decidido no inicio do programa
+ */
 Detalhes* restringir_week(Pais* head_pais, char* ano1, char* ano2, int restringir)
 {
     Detalhes aux;
@@ -59,6 +65,8 @@ Detalhes* restringir_week(Pais* head_pais, char* ano1, char* ano2, int restringi
     return paux->nextD;
 }
 
+/** \brief Função que escolhe qual o modo de restrição pretendido pelo utilizador
+ */
 Pais* Escolher_restri(Pais* head,char* restricao, long long int numero, char* ano1, char* ano2)
 {
     Pais* atual;

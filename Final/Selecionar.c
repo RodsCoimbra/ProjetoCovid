@@ -1,24 +1,29 @@
 #include "Projeto_covid.h"
+/** Comentários mais completos de cada função no .h
+*/
 
-
+/** \brief A função permite fazer todos os tipos de seleção que podem ser selecionados no incio do programa
+ */
 Detalhes* selecionar (Pais* head_pais, int select)
 {
     Detalhes* aux = NULL, *atual, *remover = NULL;
-    int num_week = -1; //como o numero de infetados/mortos não pode ser negativo então ele guarda sempre o primeiro valor dos detalhes no aux
+    int num_week = -1;          //como o numero de infetados/mortos não pode ser negativo então ele guarda sempre o primeiro valor dos detalhes no aux
     double num_racio = -1;
-    for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)     // Executa até percorrer a lista toda
+    for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)     // Executa até percorrer a lista de detalhes daquele pais toda
     {
         if(((strcmp(atual->indic,"cases")== 0) && (atual->week_count > num_week) && (select== 1)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->week_count > num_week) && (select == 2)) || ((strcmp(atual->indic,"cases") == 0) && (atual->lastfteen > num_racio) && (select== 3)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->lastfteen > num_racio) && (select == 4)))
             // Este if serve para os 4 tipos de seleção
         {
-            free(aux);
+            free(aux);          //dá free do valor que se tinha guardado antes
+
+            //guarda os valores do novo "atual" e o endereço
             aux = atual;
             num_week = atual->week_count;
             num_racio = atual->lastfteen;
         }
-        else
+        else            //caso não entre no if, então esse elemento da lista é para ser descartado
         {
-            free (remover);
+            free (remover);     //dá free do remover anterior(não é removido logo o atual para não perder a lista)
             remover = atual;
         }
     }
@@ -26,7 +31,8 @@ Detalhes* selecionar (Pais* head_pais, int select)
     return  aux;
 }
 
-
+/** \brief Função que escolhe qual o modo de seleção pretendido pelo utilizador e aplica o a todos os países existentes na lista
+ */
 void Escolher_sel(Pais* head, char* selecao)
 {
     Pais* atual;

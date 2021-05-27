@@ -1,5 +1,9 @@
 #include "Projeto_covid.h"
+/** Comentários mais completos de cada função no .h
+*/
 
+/** \brief Função que imprime avisos de erro e o menu de ajuda que contém todas as instruções referentes ao programa
+ */
 void help(int helpvar)
 {
     switch (helpvar)
@@ -63,14 +67,17 @@ void help(int helpvar)
     exit(-1);
 }
 
+/** \brief A função procura o elemento dado em "sep" numa string, substitui por "troca" e retorna o endereço do carater a seguir ao trocado
+ */
 char* separar(char sep, char* str, char troca)
 {
     int i;
     char* psep = NULL;
     for(i=0; str[i] != '\0' ; i++)   // Executa enquanto não chegar ao final da string
     {
-        if(str[i] == sep)       // Quando encontrar o carater passado na variavel "sep" muda esse carater para o que for passado pela variavel "troca" e retorna o endereço do carater a seguir ao trocado
+        if(str[i] == sep)
         {
+            // Quando encontrar o carater passado na variavel "sep" muda esse carater para o que for passado pela variavel "troca" e retorna o endereço do carater a seguir ao trocado
             str[i] = troca;
             psep = &str[i+1];
             break;
@@ -79,12 +86,14 @@ char* separar(char sep, char* str, char troca)
     return psep;
 }
 
-
+/** \brief Função que confirma se os argumentos sobre datas passados pelo utilizador estão bem escritos (formato yyyy-ww)
+ */
 int verificacao_week(char* str)
 {
     int a;
     for(a=0; a != 7; a++)
-    {                                        //formato que a string tem de ter é yyyy-ww
+    {
+        //formato que a string tem de ter é yyyy-ww
         if(isdigit(str[a]) == 0 && a != 4)  //a função isdigit retorna 0 caso não seja um número, logo se qualquer um dos carateres não for um número sem ser o 5º digito(o valor que contém '-') entra no if
         {
             return (1);
@@ -97,7 +106,8 @@ int verificacao_week(char* str)
     return (0);                             //retorna 0 caso não tenha erro para não entrar no if do erro
 }
 
-
+/** \brief Função que confirma se a string passada não contêm algarismos
+ */
 int verificacao_palavra(char* str)
 {
     int a;
