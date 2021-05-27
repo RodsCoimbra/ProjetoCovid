@@ -12,28 +12,28 @@ int main(int argc, char *argv[])
         switch (opt)
         {
         case 'P':
-            restri = 1;
-            sscanf(optarg," %s", restricao);
-            if (strcmp("min", restricao) == 0 || strcmp("max", restricao) == 0)
+            restri = 1;     // Inicar a flag
+            sscanf(optarg," %s", restricao);        // Lê a opção de Restrição do utilizador
+            if (strcmp("min", restricao) == 0 || strcmp("max", restricao) == 0)     // Executa caso a opção escolhida for "min" ou "max"
             {
-                if(sscanf(optarg + strlen(restricao) + 1," %lld", &numero) != 1)
+                if(sscanf(optarg + strlen(restricao) + 1," %lld", &numero) != 1)        // ?? ??
                 {
                     help(6);
                 }
             }
-            else if (strcmp("date", restricao) == 0)
+            else if (strcmp("date", restricao) == 0)        // Executa caso a opção escolhida for "date"
             {
-                sscanf(optarg + strlen(restricao) + 1," %s", ano1);
-                if(verificacao_week(ano1))
+                sscanf(optarg + strlen(restricao) + 1," %s", ano1);        // ?? ??
+                if(verificacao_week(ano1))      // Verifica se o ano e semana estam escrita de forma correta
                 {
                     help(6);
                 }
             }
-            else if (strcmp("dates", restricao) == 0)
+            else if (strcmp("dates", restricao) == 0)       // Executa caso a opção escolhida for "dates"
             {
-                sscanf(optarg + strlen(restricao) + 1," %s", ano1);
-                sscanf(optarg + strlen(restricao) +strlen(ano1) + 2," %s", ano2);
-                if(verificacao_week(ano1) || verificacao_week(ano2))
+                sscanf(optarg + strlen(restricao) + 1," %s", ano1);     // ?? ??
+                sscanf(optarg + strlen(restricao) +strlen(ano1) + 2," %s", ano2);       // ?? ??
+                if(verificacao_week(ano1) || verificacao_week(ano2))        // Verifica se as datas estam escritas de forma correta se alguma delas não estiver apresenta o menu de ajuda
                 {
                     help(6);
                 }
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
             }
             break;
         case 'L':
-            sscanf(optarg," %s", leitura);
+            sscanf(optarg," %s", leitura);      // Lê a opção de Leitura do utilizador
             if(strcmp(leitura, "all") == 0 || strcmp(leitura, "Africa") == 0 || strcmp(leitura, "America") == 0 || strcmp(leitura, "Asia") == 0 || strcmp(leitura, "Europe") == 0 || strcmp(leitura, "Oceania") == 0)
             {
                 break;
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
                 help(7);
             }
         case 'D':
-            sscanf(optarg," %s", selecao);
+            sscanf(optarg," %s", selecao);      // Lê a opção de Seleção do utilizador
             if(strcmp(selecao, "inf") == 0 || strcmp(selecao, "dea") == 0 || strcmp(selecao, "racioinf") == 0 || strcmp(selecao, "raciodea") == 0)
             {
                 sel = 1;
@@ -66,15 +66,15 @@ int main(int argc, char *argv[])
             }
 
         case 'S':
-            sscanf(optarg," %s", ordenacao);
-            if(strcmp(ordenacao,"alfa") == 0 || strcmp(ordenacao,"pop") == 0)
+            sscanf(optarg," %s", ordenacao);        // Lê a opção de Ordenação do utilizador
+            if(strcmp(ordenacao,"alfa") == 0 || strcmp(ordenacao,"pop") == 0)       // Executa se a opção escolhida for "alfa" nem "pop"
             {
                 break;
             }
-            else if (strcmp("inf", ordenacao) == 0 || strcmp("dea", ordenacao) == 0)
+            else if (strcmp("inf", ordenacao) == 0 || strcmp("dea", ordenacao) == 0)        // Executa se a opção de ordenação escolhida foi "inf" ou "dea"
             {
-                sscanf(optarg + strlen(ordenacao) + 1," %s", ano_ord);
-                if(verificacao_week(ano_ord))
+                sscanf(optarg + strlen(ordenacao) + 1," %s", ano_ord);      // ??optem a semana??
+                if(verificacao_week(ano_ord))       // Verifica se a semana está escrita de forma correta
                 {
                     help(9);
                 }
@@ -120,14 +120,14 @@ int main(int argc, char *argv[])
     FILE *lp = NULL;    //lp = File pointer de leitura
     FILE *ep = NULL;    //ep = File pointer de escrita
     //Tipo de leitura
-    if(strcmp(l_ext,"csv") == 0)
+    if(strcmp(l_ext,"csv") == 0)        // Se for um ficheiro om extenção .csv
     {
-        if ((lp = fopen(l_fich, "r"))== NULL)
+        if ((lp = fopen(l_fich, "r"))== NULL)       // Se o ficheiro de entrada for vazio, fecha o ficheiro e mostra o menu de ajuda
         {
             help(2);
         }
     }
-    else if((strcmp(l_ext,"dat")) == 0)
+    else if((strcmp(l_ext,"dat")) == 0)     // Se for um ficheiro om extenção .dat
     {
         if ((lp = fopen(l_fich, "rb")) == NULL)
         {
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     //Tipo de escrita
     if(strcmp(e_ext,"csv") == 0)
     {
-        if ((ep = fopen(e_fich, "w")) == NULL)
+        if ((ep = fopen(e_fich, "w")) == NULL)      // , fecha o ficheiro e mostra o menu de ajuda
         {
             fclose(lp);
             help(5);
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     }
     else if((strcmp(e_ext,"dat")) == 0)
     {
-        if ((ep = fopen(e_fich, "wb"))==NULL)
+        if ((ep = fopen(e_fich, "wb"))==NULL)       // Se o ficheiro de entrada for vazio, fecha o ficheiro e mostra o menu de ajuda
         {
             fclose(lp);
             help(5);
@@ -158,38 +158,38 @@ int main(int argc, char *argv[])
     }
     else
     {
-        fclose(lp);
+        fclose(lp);     // Fecha o ficheiro de leitura
         help(5);
     }
     Pais* head = NULL;
 
     ///Leitura do ficheiro
-    head = leit (head, lp, l_ext, ep, leitura, e_ext);
+    head = leit (head, lp, l_ext, ep, leitura, e_ext);      // Chama a função de leitura do ficheiro de entrada
 
     ///Selecao
     if(sel)
     {
-        Escolher_sel(head, selecao);
+        Escolher_sel(head, selecao);        // Chama a função de seleção que irá executar o tratamento de dados pedido no incio do programa
     }
 
     ///restricao
     if(restri)
     {
-        head = Escolher_restri(head, restricao, numero, ano1, ano2);
+        head = Escolher_restri(head, restricao, numero, ano1, ano2);        // ??
     }
 
     ///ordenacao
     if(head != NULL && head->nextP != NULL)
     {
-        head = Escolher_orde(head, ordenacao, ano_ord);
+        head = Escolher_orde(head, ordenacao, ano_ord);     // ??
     }
 
     ///Escrita de dados
-    escrita(ep, head, e_ext);
+    escrita(ep, head, e_ext);       // Escreve no ficheiro escolhido na inicialização do programa
 
-    apagar(head);
-    fclose(lp);
-    fclose(ep);
+    apagar(head);       // Free do pointer head
+    fclose(lp);         // Fecha o ficheiro de leitura
+    fclose(ep);         // Fecha o ficheiro de escrita
     printf("\nO seu ficheiro foi concluido! O conteudo foi escrito no ficheiro %s \n\n",e_fich);
     return 0;
 
