@@ -166,7 +166,7 @@ Pais* ordenar(Pais*, int, char*);
  */
 int verificacao_week(char*);
 
-/** \brief Função que confirma se a string passada não contêm algarismos
+/** \brief Função que confirma se a string passada só contêm letras e espaços
  *
  * \param char*: dado do ficheiro que se quer analisar
  * \return int: Retorna 0 caso esteja no formato correto e 1 caso contrário

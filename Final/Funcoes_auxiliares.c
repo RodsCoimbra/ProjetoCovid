@@ -106,14 +106,14 @@ int verificacao_week(char* str)
     return (0);                             //retorna 0 caso não tenha erro para não entrar no if do erro
 }
 
-/** \brief Função que confirma se a string passada não contêm algarismos
+/** \brief Função que confirma se a string passada só contêm letras e espaços
  */
 int verificacao_palavra(char* str)
 {
     int a;
     for(a=0; a < strlen(str); a++)
     {
-        if(isdigit(str[a]) != 0)    //a função isdigit retorna 0 caso não seja um número, logo se qualquer um dos carateres for um número entra no if
+        if(isalpha(str[a]) == 0 && str[a] != ' ')    //a função isalpha retorna 0 caso não seja uma letra, logo se qualquer um dos carateres não for letra nem espaço entra no if
         {
             return (1);
         }
