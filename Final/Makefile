@@ -37,4 +37,3 @@ covid19.tar.gz: Makefile $(SRCS) $(HEADERS) $(PDFS)
 # para forçar recompilação, dar o comando "make clean" e depois "make" ou o comando "make clean ; make"
 clean:
 	rm -f *.o covid19
-
