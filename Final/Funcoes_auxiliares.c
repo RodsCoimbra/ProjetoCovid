@@ -9,37 +9,34 @@ void help(int helpvar)
     switch (helpvar)
     {
     case 1:
-        perror("Argumentos de entrada desconhecido.");
+        perror("-1 Erro! Argumentos de entrada desconhecido.");
         break;
     case 2:
-        perror("Nao foi possivel ler o ficheiro de entrada.");
+        perror("-1 Erro! Nao foi possivel ler o ficheiro de entrada.");
         break;
     case 3:
-        perror("Nao foi possivel alocar memória.");
-        break;
-    case 4:
-        perror("O ficheiro de entrada não tem dados.");
+        perror("-1 Erro! Nao foi possivel alocar memória.");
         break;
     case 5:
-        perror("Ficheiro de escrita inválido (possivelmente esta aberto ou não foi passado o argumento)");
+        perror("-1 Erro! Ficheiro de escrita inválido (possivelmente esta aberto ou não foi passado o argumento)");
         break;
     case 6:
-        perror("O argumento -P está errado.");
+        perror("-1 Erro! O argumento -P está errado.");
         break;
     case 7:
-        perror("O argumento -L está errado.");
+        perror("-1 Erro! O argumento -L está errado.");
         break;
     case 8:
-        perror("O argumento -D está errado.");
+        perror("-1 Erro! O argumento -D está errado.");
         break;
     case 9:
-        perror("O argumento -S está errado.");
+        perror("-1 Erro! O argumento -S está errado.");
         break;
     case 10:
-        perror("O ficheiro contêm um erro na linha escrita em cima.");
+        perror("-1 Erro! O ficheiro contêm um erro na linha escrita em cima.");
         break;
     case 11:
-        perror("O ficheiros de entrada e de saida são os mesmos.");
+        perror("-1 Erro! O ficheiros de entrada e de saida são os mesmos.");
         break;
     }
 
