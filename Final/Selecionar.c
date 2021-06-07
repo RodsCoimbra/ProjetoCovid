@@ -11,7 +11,7 @@ Detalhes* selecionar (Pais* head_pais, int select)
     double num_racio = -1;
     for (atual = head_pais->nextD; atual != NULL; atual = atual->nextD)     // Executa até percorrer a lista de detalhes daquele pais toda
     {
-        if(((strcmp(atual->indic,"cases")== 0) && (atual->week_count > num_week) && (select== 1)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->week_count > num_week) && (select == 2)) || ((strcmp(atual->indic,"cases") == 0) && (atual->lastfteen > num_racio) && (select== 3)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->lastfteen > num_racio) && (select == 4)))
+        if(((strcmp(atual->indic,"cases")== 0) && (atual->week_count >= num_week) && (select== 1)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->week_count >= num_week) && (select == 2)) || ((strcmp(atual->indic,"cases") == 0) && (atual->lastfteen >= num_racio) && (select== 3)) || ((strcmp(atual->indic,"deaths")== 0) && (atual->lastfteen >= num_racio) && (select == 4)))
             // Este if serve para os 4 tipos de seleção
         {
             free(aux);          //dá free do valor que se tinha guardado antes
